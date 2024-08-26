@@ -12,51 +12,6 @@ Feature management helps developers address the following problems:
 * **Instant kill switch**: Feature flags provide an inherent safety net for releasing new functionality. You can turn application features on and off without redeploying any code. If necessary, you can quickly disable a feature without rebuilding and redeploying your application.
 * **Selective activation**: Use feature flags to segment your users and deliver a specific set of features to each group. You might have a feature that works only on a certain web browser. You can define a feature flag so that only users of that browser can see and use the feature. By using this approach, you can easily expand the supported browser list later without having to make any code changes.
 
-## Basic concepts
-
-Here are several new terms related to feature management:
-
-* **Feature flag**: A feature flag is a variable with a binary state of *on* or *off*. The feature flag also has an associated code block. The feature flag's state triggers whether the code block runs.
-* **Feature manager**: A feature manager is an application package that handles the life cycle of all the feature flags in an application. The feature manager also provides additional functionality, including caching feature flags and updating their states.
-* **Filter**: A filter is a rule for evaluating the state of a feature flag. Potential filters include user groups, device or browser types, geographic locations, and time windows.
-
-An effective implementation of feature management consists of at least two components working in concert:
-
-* An application that makes use of feature flags.
-* A separate repository that stores the feature flags and their current states.
-
-## Using feature flags in your code
-
-The basic pattern for implementing feature flags in an application is simple. A feature flag is a Boolean state variable controlling a conditional statement in your code:
-
-```csharp
-if (featureFlag) {
-    // Run the following code
-}
-```
-
-You can set the value of `featureFlag` statically:
-
-```csharp
-bool featureFlag = true;
-```
-
-You can evaluate the flag's state based on certain rules:
-
-```csharp
-bool featureFlag = isBetaUser();
-```
-
-You can extend the conditional to set application behavior for either state:
-
-```csharp
-if (featureFlag) {
-    // This following code will run if the featureFlag value is true
-} else {
-    // This following code will run if the featureFlag value is false
-}
-```
-
 ## Client Libraries
 
 Module | Platform | Sample | Release Notes
