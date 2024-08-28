@@ -1,0 +1,18 @@
+feature-management:
+  feature_flags:
+  - id: BooleanTrue
+    description: A feature flag with no Filters, that returns true.
+    enabled: true
+  - id: BooleanFalse
+    description: A feature flag with no Filters, that returns false.
+    enabled: false
+  - id: InvalidEnabled
+    description: A feature flag with an invalid 'enabled' value, that returns false.
+    enabled: invalid
+  - id: Minimal
+    enabled: true
+  - id: NoEnabled
+  - id: EmptyConditions
+    description: A feature flag with no values in conditions, that returns true.
+    enabled: true
+    conditions: {}

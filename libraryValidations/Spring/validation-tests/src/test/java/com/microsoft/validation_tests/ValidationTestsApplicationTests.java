@@ -1,7 +1,6 @@
 package com.microsoft.validation_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +29,12 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.microsoft.validation_tests.models.ValidationTestCase;
 
-@TestPropertySource(locations = "file:./../../../Samples/NoFilters.sample.json")
+//@TestPropertySource(locations = "file:./../../../Samples/NoFilters.sample.json")
+@TestPropertySource(locations = "/config/application.yml")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootTest.class })
 @EnableConfigurationProperties
-@EnableAutoConfiguration
+//@EnableAutoConfiguration
 @ComponentScan(basePackages = { "com.azure.spring.cloud.feature.management" })
 @ActiveProfiles("override")
 class ValidationTestsApplicationTests {
@@ -44,7 +44,7 @@ class ValidationTestsApplicationTests {
     private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
         .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
     
-    private static final String PATH = "src/test/resources/";
+    private static final String PATH = "./../../../Samples/";
 
     private static final String NAME = "NoFilters";
 
@@ -61,8 +61,7 @@ class ValidationTestsApplicationTests {
 
     @Test
     void contextLoads() throws IOException {
-        assertTrue(featureManager.isEnabled("BooleanTrue"));
-        LOGGER.debug("Running test case from file: " + NAME);
+        LOGGER.info("Running test case from file: " + NAME);
         final File testsFile = new File(PATH + TEST_FILE_NAME);
         List<ValidationTestCase> testCases = readTestcasesFromFile(testsFile);
         for (ValidationTestCase testCase : testCases) {
@@ -83,7 +82,8 @@ class ValidationTestsApplicationTests {
             }
 
             final Boolean result = featureManager.isEnabled(testCase.getFeatureFlagName());
-            assertEquals(result.toString(), testCase.getIsEnabled().getResult());
+            LOGGER.info(testCase.getFeatureFlagName());
+            assertEquals(result.toString(), testCase.getIsEnabled().getResult(), testCase.getFriendlyName());
         }
     }
 
