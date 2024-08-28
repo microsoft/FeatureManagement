@@ -13,7 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
@@ -29,12 +28,10 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.microsoft.validation_tests.models.ValidationTestCase;
 
-//@TestPropertySource(locations = "file:./../../../Samples/NoFilters.sample.json")
-@TestPropertySource(locations = "/config/application.yml")
+@TestPropertySource(locations = "file:./../../../Samples/NoFilters.sample.json")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { SpringBootTest.class })
 @EnableConfigurationProperties
-//@EnableAutoConfiguration
 @ComponentScan(basePackages = { "com.azure.spring.cloud.feature.management" })
 @ActiveProfiles("override")
 class ValidationTestsApplicationTests {
@@ -61,7 +58,7 @@ class ValidationTestsApplicationTests {
 
     @Test
     void contextLoads() throws IOException {
-        LOGGER.info("Running test case from file: " + NAME);
+        LOGGER.debug("Running test case from file: " + NAME);
         final File testsFile = new File(PATH + TEST_FILE_NAME);
         List<ValidationTestCase> testCases = readTestcasesFromFile(testsFile);
         for (ValidationTestCase testCase : testCases) {
@@ -82,7 +79,6 @@ class ValidationTestsApplicationTests {
             }
 
             final Boolean result = featureManager.isEnabled(testCase.getFeatureFlagName());
-            LOGGER.info(testCase.getFeatureFlagName());
             assertEquals(result.toString(), testCase.getIsEnabled().getResult(), testCase.getFriendlyName());
         }
     }
