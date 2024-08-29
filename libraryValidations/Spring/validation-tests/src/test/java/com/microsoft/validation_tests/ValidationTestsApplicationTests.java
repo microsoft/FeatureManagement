@@ -62,7 +62,7 @@ class ValidationTestsApplicationTests {
             }
 
             final Boolean result = featureManager.isEnabled(testCase.getFeatureFlagName());
-            assertEquals(result.toString(), testCase.getIsEnabled().getResult(), testCase.getFriendlyName());
+            assertEquals(testCase.getIsEnabled().getResult(), result.toString(), testCase.getFeatureFlagName());
         }
     }
 
