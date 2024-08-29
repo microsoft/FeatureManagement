@@ -13,9 +13,22 @@ public class TargetingFilterTestContextAccessor implements TargetingContextAcces
 
     private List<String> groups;
 
-    public TargetingFilterTestContextAccessor(String user, List<String> groups) {
+    public String getUser() {
+        return user;
+    }
+
+    public TargetingFilterTestContextAccessor setUser(String user) {
         this.user = user;
+        return this;
+    }
+
+    public List<String> getGroups() {
+        return groups;
+    }
+
+    public TargetingFilterTestContextAccessor setGroups(List<String> groups) {
         this.groups = groups;
+        return this;
     }
 
     @Override

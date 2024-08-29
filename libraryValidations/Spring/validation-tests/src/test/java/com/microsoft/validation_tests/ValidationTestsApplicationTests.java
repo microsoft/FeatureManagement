@@ -8,17 +8,9 @@ import java.nio.file.Files;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.azure.spring.cloud.feature.management.FeatureManager;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -28,26 +20,16 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.microsoft.validation_tests.models.ValidationTestCase;
 
-@TestPropertySource(locations = "file:./../../../Samples/NoFilters.sample.json")
-@ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { SpringBootTest.class })
-@EnableConfigurationProperties
-@ComponentScan(basePackages = { "com.azure.spring.cloud.feature.management" })
-@ActiveProfiles("override")
 class ValidationTestsApplicationTests {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ValidationTestsApplicationTests.class);
 
     private static final ObjectMapper OBJECT_MAPPER = JsonMapper.builder()
         .configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true).build();
-    
+
     private static final String PATH = "./../../../Samples/";
 
-    private static final String NAME = "NoFilters";
-
-    private static final String SOURCE = NAME + ".sample.json";
-    
-    static final String TEST_FILE_NAME = NAME + ".tests.json";
+    static final String TEST_FILE_POSTFIX = ".tests.json";
 
     private final String inputsUser = "user";
 
@@ -55,11 +37,13 @@ class ValidationTestsApplicationTests {
 
     @Autowired
     private FeatureManager featureManager;
+    
+    @Autowired
+    private TargetingFilterTestContextAccessor accessor;
 
-    @Test
-    void contextLoads() throws IOException {
-        LOGGER.debug("Running test case from file: " + NAME);
-        final File testsFile = new File(PATH + TEST_FILE_NAME);
+    void runTests(String name) throws IOException {
+        LOGGER.debug("Running test case from file: " + name);
+        final File testsFile = new File(PATH + name + TEST_FILE_POSTFIX);
         List<ValidationTestCase> testCases = readTestcasesFromFile(testsFile);
         for (ValidationTestCase testCase : testCases) {
             LOGGER.debug("Test case : " + testCase.getDescription());
@@ -74,8 +58,7 @@ class ValidationTestsApplicationTests {
                 final String user = userObj != null ? userObj.toString() : null;
                 @SuppressWarnings("unchecked")
                 final List<String> groups = groupsObj != null ? (List<String>) groupsObj : null;
-                // when(context.getBean(Mockito.contains("Targeting")))
-                // .thenReturn(new TargetingFilter(new TargetingFilterTestContextAccessor(user, groups)));
+                accessor.setUser(user).setGroups(groups);
             }
 
             final Boolean result = featureManager.isEnabled(testCase.getFeatureFlagName());
