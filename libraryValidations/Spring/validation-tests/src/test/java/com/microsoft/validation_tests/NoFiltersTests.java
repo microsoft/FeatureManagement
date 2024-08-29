@@ -19,7 +19,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 class NoFiltersTests extends ValidationTestsApplicationTests {  
     
     @Test
-    void contextLoads() throws IOException {
+    void validateTest() throws IOException {
         runTests("NoFilters");
     }
 
