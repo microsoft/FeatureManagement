@@ -14,6 +14,7 @@ SAMPLE_JSON_KEY = ".sample.json"
 TESTS_JSON_KEY = ".tests.json"
 FRIENDLY_NAME_KEY = "FriendlyName"
 IS_ENABLED_KEY = "IsEnabled"
+GET_VARIANT_KEY = "Variant"
 RESULT_KEY = "Result"
 FEATURE_FLAG_NAME_KEY = "FeatureFlagName"
 INPUTS_KEY = "Inputs"
@@ -61,6 +62,11 @@ class TestNoFiltersFromFile(unittest.TestCase):
         test_key = "RequirementType"
         self.run_tests(test_key)
 
+    # method: is_enabled
+    def test_basic_variant(self):
+        test_key = "BasicVariant"
+        self.run_tests(test_key)
+
     @staticmethod
     def load_from_file(file):
         with open(FILE_PATH + file, "r", encoding="utf-8") as feature_flags_file:
@@ -80,6 +86,7 @@ class TestNoFiltersFromFile(unittest.TestCase):
 
         for feature_flag_test in feature_flag_tests:
             is_enabled = feature_flag_test[IS_ENABLED_KEY]
+            get_variant = feature_flag_test.get(GET_VARIANT_KEY, None)
             expected_is_enabled_result = convert_boolean_value(is_enabled.get(RESULT_KEY))
             feature_flag_id = test_key + "." + feature_flag_test[FEATURE_FLAG_NAME_KEY]
 
@@ -99,3 +106,9 @@ class TestNoFiltersFromFile(unittest.TestCase):
                     feature_manager.is_enabled(feature_flag_test[FEATURE_FLAG_NAME_KEY])
                 expected_message = is_enabled.get(EXCEPTION_KEY)
                 assert str(ex_info.value) == expected_message, failed_description
+
+            if get_variant is not None and get_variant[RESULT_KEY]:
+                user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
+                groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
+                variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
+                assert variant.configuration == get_variant[RESULT_KEY], failed_description
