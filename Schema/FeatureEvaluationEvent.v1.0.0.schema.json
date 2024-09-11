@@ -17,7 +17,7 @@
       "type": "string",
       "title": "Feature Name",
       "description": "The name of the feature flag being evaluated.",
-      "pattern": "^[^:%]*$"
+      "pattern": "^[^:\n\r%]*$"
     },
     "Enabled": {
       "$id": "#/properties/Enabled",
