@@ -50,7 +50,7 @@
       "$id": "#/properties/TargetingId",
       "type": "string",
       "title": "Targeting Id",
-      "description": "The user id used for the feature evaluation.",
+      "description": "The targeting id used for the feature evaluation.",
       "pattern": "^(.*)$"
     }
   }
