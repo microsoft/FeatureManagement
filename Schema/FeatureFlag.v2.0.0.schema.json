@@ -16,7 +16,7 @@
       "examples": [
         "fancy-background"
       ],
-      "pattern": "^[^:%]*$"
+      "pattern": "^[^:\n\r%]*$"
     },
     "description": {
       "$id": "#/properties/description",
@@ -144,7 +144,7 @@
                   "type": "string",
                   "title": "Variant Name",
                   "description": "The name used to refer to a feature variant.",
-                  "pattern": "^(.*)$"
+                  "pattern": "^[^:\n\r%]*$"
               },
               "configuration_value": {
                   "$id": "#/properties/variants/items/properties/configuration_value",
@@ -181,7 +181,7 @@
               "title": "Default Variant Allocation When Disabled",
               "description": "Specifies which variant should be used when the feature is considered disabled.",
               "default": "",
-              "pattern": "^(.*)$"
+              "pattern": "^[^:\n\r%]*$"
           },
           "default_when_enabled": {
               "$id": "#/properties/allocation/properties/default_when_enabled",
@@ -189,7 +189,7 @@
               "title": "Default Variant Allocation When Enabled",
               "description": "Specifies which variant should be used when the feature is considered enabled and no other allocation rules are applicable.",
               "default": "",
-              "pattern": "^(.*)$"
+              "pattern": "^[^:\n\r%]*$"
           },
           "user": {
               "$id": "#/properties/allocation/properties/user",
@@ -210,7 +210,7 @@
                           "type": "string",
                           "title": "User Allocation Variant",
                           "description": "The name of the variant to use if the user allocation matches the current user.",
-                          "pattern": "^(.*)$"
+                          "pattern": "^[^:\n\r%]*$"
                       },
                       "users": {
                           "$id": "#/properties/allocation/properties/user/items/properties/users",
@@ -243,7 +243,7 @@
                           "type": "string",
                           "title": "Group Allocation Variant",
                           "description": "The name of the variant to use if the group allocation matches a group the current user is in.",
-                          "pattern": "^(.*)$"
+                          "pattern": "^[^:\n\r%]*$"
                       },
                       "groups": {
                           "$id": "#/properties/allocation/properties/group/items/properties/groups",
@@ -277,7 +277,7 @@
                           "type": "string",
                           "title": "Percentile Allocation Variant",
                           "description": "The name of the variant to use if the calculated percentile for the current user falls in the provided range.",
-                          "pattern": "^(.*)$"
+                          "pattern": "^[^:\n\r%]*$"
                       },
                       "from": {
                           "$id": "#/properties/allocation/properties/percentile/items/properties/from",
