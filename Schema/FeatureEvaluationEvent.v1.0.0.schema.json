@@ -30,7 +30,7 @@
       "type": "string",
       "title": "Assigned Variant",
       "description": "The assigned variant during the feature evaluation.",
-      "pattern": "^[^\n\r]*$"
+      "pattern":  "^(.*)$"
     },
     "VariantAssignmentReason": {
       "$id": "#/properties/VariantAssignmentReason",
