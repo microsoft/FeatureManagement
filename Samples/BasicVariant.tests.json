@@ -1,0 +1,50 @@
+[
+    {
+        "FeatureFlagName": "Variant_Override_True",
+        "Inputs": {},
+        "IsEnabled": {
+            "Result": "false"
+        },
+        "Variant": {
+            "Result": "default"
+        },
+        "Description": "An Enabled Feature Flag with no Filters."
+    },
+    {
+        "FeatureFlagName": "Variant_Override_False",
+        "Inputs": {},
+        "IsEnabled": {
+            "Result": "false"
+        },
+        "Variant": {
+            "Result": "default"
+        },
+        "Description": "A Disabled Feature Flag with no Filters."
+    },
+    {
+        "FeatureFlagName": "TestVariants",
+        "Inputs": {
+            "user": "Adam"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
+    },
+    {
+        "FeatureFlagName": "TestVariants",
+        "Inputs": {
+            "user": "Britney"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Beta."
+        },
+        "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
+    }
+]

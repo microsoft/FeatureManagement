@@ -396,3 +396,14 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Python env
+env/
+
+.classpath
+
+.mvn
+.project
+.settings
+mvnw*
+target/
