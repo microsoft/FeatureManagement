@@ -3,7 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-
+import logging
 import json
 import unittest
 from pytest import raises
@@ -22,6 +22,9 @@ USER_KEY = "user"
 GROUPS_KEY = "groups"
 EXCEPTION_KEY = "Exception"
 DESCRIPTION_KEY = "Description"
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def convert_boolean_value(enabled):
@@ -65,6 +68,11 @@ class TestNoFiltersFromFile(unittest.TestCase):
     # method: is_enabled
     def test_basic_variant(self):
         test_key = "BasicVariant"
+        self.run_tests(test_key)
+
+    # method: is_enabled
+    def test_variant_assignment(self):
+        test_key = "VariantAssignment"
         self.run_tests(test_key)
 
     @staticmethod
@@ -111,4 +119,7 @@ class TestNoFiltersFromFile(unittest.TestCase):
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
                 variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
+                if not variant:
+                    logger.error(f"Variant is None for {feature_flag_id}")
+                    assert False, failed_description
                 assert variant.configuration == get_variant[RESULT_KEY], failed_description
