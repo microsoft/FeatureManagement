@@ -1,0 +1,155 @@
+{
+    "feature_management": {
+        "feature_flags": [         
+            {
+                "id": "UserAssignedVariant",
+                "description": "",
+                "enabled": "true",
+                "allocation": {
+                    "user": [
+                        {
+                            "variant": "Alpha",
+                            "users": [
+                                "Adam"
+                            ]
+                        },
+                        {
+                            "variant": "Beta",
+                            "users": [
+                                "Britney"
+                            ]
+                        }
+                    ]
+                },
+                "variants": [
+                    {
+                        "name": "Alpha",
+                        "configuration_value": "The Variant Alpha."
+                    },
+                    {
+                        "name": "Beta",
+                        "configuration_value": "The Variant Beta."
+                    }
+                ]
+        
+            },
+            {
+                "id": "GroupAssignedVariant",
+                "description": "",
+                "enabled": "true",
+                "allocation": {
+                    "group": [
+                        {
+                            "variant": "Alpha",
+                            "groups": [
+                                "Ring1"
+                            ]
+                        },
+                        {
+                            "variant": "Beta",
+                            "groups": [
+                                "Ring2"
+                            ]
+                        }
+                    ]
+                },
+                "variants": [
+                    {
+                        "name": "Alpha",
+                        "configuration_value": "The Variant Alpha."
+                    },
+                    {
+                        "name": "Beta",
+                        "configuration_value": "The Variant Beta."
+                    }
+                ]
+            },
+            {
+                "id": "AllocationAssignedVariant",
+                "description": "",
+                "enabled": "true",
+                "allocation": {
+                    "percentile": [
+                        {
+                            "variant": "Alpha",
+                            "from": 0,
+                            "to": 50
+                        },
+                        {
+                            "variant": "Beta",
+                            "from": 50,
+                            "to": 100
+                        }
+                    ]
+                },
+                "variants": [
+                    {
+                        "name": "Alpha",
+                        "configuration_value": "The Variant Alpha."
+                    },
+                    {
+                        "name": "Beta",
+                        "configuration_value": "The Variant Beta."
+                    }
+                ]
+            },
+            {
+                "id": "ComplexAssignment",
+                "description": "",
+                "enabled": "true",
+                "allocation": {
+                    "user": [
+                        {
+                            "variant": "Alpha",
+                            "users": [
+                                "Adam"
+                            ]
+                        },
+                        {
+                            "variant": "Beta",
+                            "users": [
+                                "Britney"
+                            ]
+                        }
+                    ],
+                    "group": [
+                        {
+                            "variant": "Alpha",
+                            "groups": [
+                                "Ring1"
+                            ]
+                        },
+                        {
+                            "variant": "Beta",
+                            "groups": [
+                                "Ring2"
+                            ]
+                        }
+                    ],
+                    "percentile": [
+                        {
+                            "variant": "Alpha",
+                            "from": 0,
+                            "to": 50
+                        },
+                        {
+                            "variant": "Beta",
+                            "from": 50,
+                            "to": 100
+                        }
+                    ]
+                },
+                "variants": [
+                    {
+                        "name": "Alpha",
+                        "configuration_value": "The Variant Alpha."
+                    },
+                    {
+                        "name": "Beta",
+                        "configuration_value": "The Variant Beta."
+                    }
+                ]
+            }
+        ]
+    }
+}
