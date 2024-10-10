@@ -1,0 +1,33 @@
+{
+    "feature_management": {
+        "feature_flags": [
+            {
+                "id": "TelemetryVariant",
+                "description": "",
+                "enabled": "true",
+                "conditions": {
+                    "client_filters": []
+                },
+                "variants": [
+                    {
+                        "name": "True_Override",
+                        "configuration_value": "default",
+                        "status_override": "Disabled"
+                    }
+                ],
+                "allocation": {
+                    "default_when_enabled": "True_Override"
+                },
+                "telemetry": {
+                    "enabled": "true",
+                    "metadata": {
+                        "ETag": "cmwBRcIAq1jUyKL3Kj8bvf9jtxBrFg-R-ayExStMC90",
+                        "FeatureFlagReference": "https://fake-config-store/kv/.appconfig.featureflag/TelemetryVariant",
+                        "FeatureFlagId": "7vpkRJe452WVvlKXfA5XF3ASllwKsYZfC7D4w05rIoo",
+                        "AllocationId": "MExY1waco2tqen4EcJKK"
+                    }
+                }
+            }
+        ]
+    }
+}
