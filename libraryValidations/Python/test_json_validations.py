@@ -8,6 +8,8 @@ import json
 import unittest
 from pytest import raises
 from featuremanagement import FeatureManager, TargetingContext
+from featuremanagement.azuremonitor import publish_telemetry
+from unittest.mock import patch, call
 
 FILE_PATH = "../../Samples/"
 SAMPLE_JSON_KEY = ".sample.json"
@@ -15,6 +17,9 @@ TESTS_JSON_KEY = ".tests.json"
 FRIENDLY_NAME_KEY = "FriendlyName"
 IS_ENABLED_KEY = "IsEnabled"
 GET_VARIANT_KEY = "Variant"
+GET_TELEMETRY_KEY = "Telemetry"
+EVENT_NAME_KEY = "event_name"
+EVENT_PROPERTIES_KEY = "event_properties"
 RESULT_KEY = "Result"
 FEATURE_FLAG_NAME_KEY = "FeatureFlagName"
 INPUTS_KEY = "Inputs"
@@ -75,27 +80,60 @@ class TestNoFiltersFromFile(unittest.TestCase):
         test_key = "VariantAssignment"
         self.run_tests(test_key)
 
+    # method: is_enabled
+    @patch("featuremanagement.azuremonitor._send_telemetry.azure_monitor_track_event")
+    def test_basic_telemetry(self, track_event_mock):
+        test_key = "BasicTelemetry"
+        self._ran_callback = False
+        self._mock_track_event = track_event_mock
+        self.run_tests(test_key, telemetry_callback=self.telemetry_callback)
+        assert self._ran_callback
+
     @staticmethod
-    def load_from_file(file):
+    def load_from_file(file, telemetry_callback=None):
         with open(FILE_PATH + file, "r", encoding="utf-8") as feature_flags_file:
             feature_flags = json.load(feature_flags_file)
 
-        feature_manager = FeatureManager(feature_flags)
+        if telemetry_callback:
+            feature_manager = FeatureManager(
+                feature_flags, on_feature_evaluated=telemetry_callback
+            )
+        else:
+            feature_manager = FeatureManager(feature_flags)
         assert feature_manager is not None
 
         return feature_manager
 
-    # method: is_enabled
-    def run_tests(self, test_key):
-        feature_manager = self.load_from_file(test_key + SAMPLE_JSON_KEY)
+    def telemetry_callback(self, evaluation_event):
+        publish_telemetry(evaluation_event)
+        expected_telemetry = self._feature_flag_test.get(GET_TELEMETRY_KEY, {})
+        self._mock_track_event.assert_has_calls(
+            [
+                call(
+                    expected_telemetry.get(EVENT_NAME_KEY, None),
+                    expected_telemetry.get(EVENT_PROPERTIES_KEY, None),
+                )
+            ]
+        )
+        self._ran_callback = True
 
-        with open(FILE_PATH + test_key + TESTS_JSON_KEY, "r", encoding="utf-8") as feature_flag_test_file:
+    def run_tests(self, test_key, telemetry_callback=None):
+        feature_manager = self.load_from_file(
+            test_key + SAMPLE_JSON_KEY, telemetry_callback=telemetry_callback
+        )
+
+        with open(
+            FILE_PATH + test_key + TESTS_JSON_KEY, "r", encoding="utf-8"
+        ) as feature_flag_test_file:
             feature_flag_tests = json.load(feature_flag_test_file)
 
         for feature_flag_test in feature_flag_tests:
+            self._feature_flag_test = feature_flag_test
             is_enabled = feature_flag_test[IS_ENABLED_KEY]
             get_variant = feature_flag_test.get(GET_VARIANT_KEY, None)
-            expected_is_enabled_result = convert_boolean_value(is_enabled.get(RESULT_KEY))
+            expected_is_enabled_result = convert_boolean_value(
+                is_enabled.get(RESULT_KEY)
+            )
             feature_flag_id = test_key + "." + feature_flag_test[FEATURE_FLAG_NAME_KEY]
 
             failed_description = f"Test {feature_flag_id} failed. Description: {feature_flag_test[DESCRIPTION_KEY]}"
@@ -105,7 +143,8 @@ class TestNoFiltersFromFile(unittest.TestCase):
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
                 assert (
                     feature_manager.is_enabled(
-                        feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups)
+                        feature_flag_test[FEATURE_FLAG_NAME_KEY],
+                        TargetingContext(user_id=user, groups=groups),
                     )
                     == expected_is_enabled_result
                 ), failed_description
@@ -118,8 +157,13 @@ class TestNoFiltersFromFile(unittest.TestCase):
             if get_variant is not None and get_variant[RESULT_KEY]:
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
-                variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
+                variant = feature_manager.get_variant(
+                    feature_flag_test[FEATURE_FLAG_NAME_KEY],
+                    TargetingContext(user_id=user, groups=groups),
+                )
                 if not variant:
                     logger.error(f"Variant is None for {feature_flag_id}")
                     assert False, failed_description
-                assert variant.configuration == get_variant[RESULT_KEY], failed_description
+                assert (
+                    variant.configuration == get_variant[RESULT_KEY]
+                ), failed_description
