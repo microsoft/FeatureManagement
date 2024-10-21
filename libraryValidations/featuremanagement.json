@@ -1,0 +1,155 @@
+[
+	{
+		"id": "Complete",
+		"description": "",
+		"enabled": true,
+		"conditions": {
+			"client_filters": [
+				{
+					"name": "Microsoft.TimeWindow",
+					"parameters": {
+						"Start": "Mon, 21 Oct 2024 07:00:00 GMT",
+						"End": "Fri, 22 Oct 3024 07:00:00 GMT"
+					}
+				}
+			]
+		},
+		"variants": [
+			{
+				"name": "Large",
+				"configuration_value": 100
+			},
+			{
+				"name": "Medium",
+				"configuration_value": 50
+			},
+			{
+				"name": "Small",
+				"configuration_value": 10
+			}
+		],
+		"allocation": {
+			"percentile": [
+				{
+					"variant": "Large",
+					"from": 0,
+					"to": 25
+				},
+				{
+					"variant": "Medium",
+					"from": 25,
+					"to": 55
+				},
+				{
+					"variant": "Small",
+					"from": 55,
+					"to": 95
+				},
+				{
+					"variant": "Large",
+					"from": 95,
+					"to": 100
+				}
+			],
+			"group": [
+				{
+					"variant": "Large",
+					"groups": [
+						"beta"
+					]
+				}
+			],
+			"user": [
+				{
+					"variant": "Small",
+					"users": [
+						"Rachel"
+					]
+				}
+			],
+			"seed": "test-seed",
+			"default_when_enabled": "Medium",
+			"default_when_disabled": "Medium"
+		},
+		"telemetry": {
+			"enabled": true
+		}
+	},
+	{
+		"id": "BackgroundColor",
+		"description": "",
+		"enabled": true,
+		"variants": [
+			{
+				"name": "Green",
+				"configuration_value": "#364243"
+			},
+			{
+				"name": "Blue",
+				"configuration_value": "#214324"
+			},
+			{
+				"name": "Red",
+				"configuration_value": "#215242"
+			}
+		],
+		"allocation": {
+			"percentile": [
+				{
+					"variant": "Green",
+					"from": 0,
+					"to": 33
+				},
+				{
+					"variant": "Blue",
+					"from": 33,
+					"to": 66
+				},
+				{
+					"variant": "Red",
+					"from": 66,
+					"to": 100
+				}
+			],
+			"default_when_enabled": "Green",
+			"default_when_disabled": "Green"
+		},
+		"telemetry": {
+			"enabled": false
+		}
+	},
+	{
+		"id": "Greeting",
+		"description": "",
+		"enabled": true,
+		"variants": [
+			{
+				"name": "On",
+				"configuration_value": true
+			},
+			{
+				"name": "Off",
+				"configuration_value": false
+			}
+		],
+		"allocation": {
+			"percentile": [
+				{
+					"variant": "On",
+					"from": 0,
+					"to": 50
+				},
+				{
+					"variant": "Off",
+					"from": 50,
+					"to": 100
+				}
+			],
+			"default_when_enabled": "Off",
+			"default_when_disabled": "Off"
+		},
+		"telemetry": {
+			"enabled": true
+		}
+	}
+]
