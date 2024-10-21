@@ -23,7 +23,7 @@
                     "title": "Feature Flags",
                     "description": "Declares feature flags based on Microsoft Feature Flag schema.",
                     "items": {
-                        "$ref": "https://raw.githubusercontent.com/Azure/AppConfiguration/main/docs/FeatureManagement/FeatureFlag.v2.0.0.schema.json"
+                        "$ref": "https://github.com/microsoft/FeatureManagement/blob/c5fab16dbf1450dce0bbfe7c4207da735ff31916/Schema/FeatureFlag.v2.0.0.schema.json"
                     }
                 }
             }
