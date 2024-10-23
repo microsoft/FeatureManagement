@@ -1,74 +1,125 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-    "contentVersion": "1.0.0.0",
-    "parameters": {
-      "location": {
-        "type": "string",
-        "defaultValue": "[resourceGroup().location]",
-        "metadata": {
-          "description": "Location for all resources."
-        }
-      },
-      "appConfigName": {
-        "type": "string",
-        "defaultValue": "[concat('appconfig', uniqueString(resourceGroup().id, deployment().name, utcNow()))]",
-        "metadata": {
-          "description": "Name of the App Configuration resource."
-        }
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location for all resources."
       }
     },
-    "resources": [
-      {
-        "type": "Microsoft.AppConfiguration/configurationStores",
-        "apiVersion": "2021-03-01-preview",
-        "name": "[parameters('appConfigName')]",
-        "location": "[parameters('location')]",
-        "sku": {
-          "name": "Standard"
-        },
-        "properties": {}
-      },
-      {
-        "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-        "apiVersion": "2021-03-01-preview",
-        "name": "[concat(parameters('appConfigName'), '/','.appconfig.featureflag~2FComplete')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
-        ],
-        "properties": {
-          "value": "{\"id\":\"Complete\",\"description\":\"\",\"enabled\":true,\"conditions\":{\"client_filters\":[{\"name\":\"Microsoft.TimeWindow\",\"parameters\":{\"Start\":\"Mon, 21 Oct 2024 07:00:00 GMT\",\"End\":\"Fri, 22 Oct 3024 07:00:00 GMT\"}}]},\"variants\":[{\"name\":\"Large\",\"configuration_value\":100},{\"name\":\"Medium\",\"configuration_value\":50},{\"name\":\"Small\",\"configuration_value\":10}],\"allocation\":{\"percentile\":[{\"variant\":\"Large\",\"from\":0,\"to\":25},{\"variant\":\"Medium\",\"from\":25,\"to\":55},{\"variant\":\"Small\",\"from\":55,\"to\":95},{\"variant\":\"Large\",\"from\":95,\"to\":100}],\"group\":[{\"variant\":\"Large\",\"groups\":[\"beta\"]}],\"user\":[{\"variant\":\"Small\",\"users\":[\"Rachel\"]}],\"seed\":\"test-seed\",\"default_when_enabled\":\"Medium\",\"default_when_disabled\":\"Medium\"},\"telemetry\":{\"enabled\":true}}",
-          "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
-        }
-      },
-      {
-        "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-        "apiVersion": "2021-03-01-preview",
-        "name": "[concat(parameters('appConfigName'), '/', '.appconfig.featureflag~2FBackgroundColor')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
-        ],
-        "properties": {
-          "value": "{\"id\":\"BackgroundColor\",\"description\":\"\",\"enabled\":true,\"variants\":[{\"name\":\"Green\",\"configuration_value\":\"#364243\"},{\"name\":\"Blue\",\"configuration_value\":\"#214324\"},{\"name\":\"Red\",\"configuration_value\":\"#215242\"}],\"allocation\":{\"percentile\":[{\"variant\":\"Green\",\"from\":0,\"to\":33},{\"variant\":\"Blue\",\"from\":33,\"to\":66},{\"variant\":\"Red\",\"from\":66,\"to\":100}],\"default_when_enabled\":\"Green\",\"default_when_disabled\":\"Green\"},\"telemetry\":{\"enabled\":false}}",
-          "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
-        }
-      },
-      {
-        "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
-        "apiVersion": "2021-03-01-preview",
-        "name": "[concat(parameters('appConfigName'), '/' , '.appconfig.featureflag~2FGreeting')]",
-        "dependsOn": [
-          "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
-        ],
-        "properties": {
-          "value": "{\"id\":\"Greeting\",\"description\":\"\",\"enabled\":true,\"variants\":[{\"name\":\"On\",\"configuration_value\":true},{\"name\":\"Off\",\"configuration_value\":false}],\"allocation\":{\"percentile\":[{\"variant\":\"On\",\"from\":0,\"to\":50},{\"variant\":\"Off\",\"from\":50,\"to\":100}],\"default_when_enabled\":\"Off\",\"default_when_disabled\":\"Off\"},\"telemetry\":{\"enabled\":true}}",
-          "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
-        }
+    "appConfigName": {
+      "type": "string",
+      "defaultValue": "[concat('appconfig', uniqueString(resourceGroup().id, deployment().name, utcNow()))]",
+      "metadata": {
+        "description": "Name of the App Configuration resource."
       }
-    ],
-    "outputs": {
-      "appConfigName": {
-        "type": "string",
-        "value": "[parameters('appConfigName')]"
+    },
+    "appInsightsName": {
+      "type": "string",
+      "defaultValue": "[concat('appinsights', uniqueString(resourceGroup().id, deployment().name, utcNow()))]",
+      "metadata": {
+        "description": "Name of the Application Insights resource."
+      }
+    },
+    "workspaceName": {
+      "type": "string",
+      "defaultValue": "[concat('loganalytics', uniqueString(resourceGroup().id, deployment().name, utcNow()))]",
+      "metadata": {
+        "description": "Name of the Log Analytics workspace."
       }
     }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces",
+      "apiVersion": "2023-09-01",
+      "name": "[parameters('workspaceName')]",
+      "location": "[parameters('location')]",
+      "properties": {}
+    },
+    {
+      "type": "Microsoft.Insights/components",
+      "apiVersion": "2020-02-02",
+      "name": "[parameters('appInsightsName')]",
+      "location": "[parameters('location')]",
+      "kind": "web",
+      "properties": {
+        "Application_Type": "web",
+        "WorkspaceResourceId": "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.OperationalInsights/workspaces', parameters('workspaceName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores",
+      "apiVersion": "2024-06-01-preview",
+      "name": "[parameters('appConfigName')]",
+      "location": "[parameters('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicNetworkAccess": "Enabled",
+        "telemetry": {
+          "encryption": {},
+          "disableLocalAuth": false,
+          "softDeleteRetentionInDays": 7,
+          "enablePurgeProtection": false,
+          "dataPlaneProxy": {
+            "authenticationMode": "Local",
+            "privateLinkDelegation": "Disabled"
+          },
+          "resourceId": "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[concat(parameters('appConfigName'), '/','.appconfig.featureflag~2FComplete')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
+      ],
+      "properties": {
+        "value": "{\"id\":\"Complete\",\"description\":\"\",\"enabled\":true,\"conditions\":{\"client_filters\":[{\"name\":\"Microsoft.TimeWindow\",\"parameters\":{\"Start\":\"Mon, 21 Oct 2024 07:00:00 GMT\",\"End\":\"Fri, 22 Oct 3024 07:00:00 GMT\"}}]},\"variants\":[{\"name\":\"Large\",\"configuration_value\":100},{\"name\":\"Medium\",\"configuration_value\":50},{\"name\":\"Small\",\"configuration_value\":10}],\"allocation\":{\"percentile\":[{\"variant\":\"Large\",\"from\":0,\"to\":25},{\"variant\":\"Medium\",\"from\":25,\"to\":55},{\"variant\":\"Small\",\"from\":55,\"to\":95},{\"variant\":\"Large\",\"from\":95,\"to\":100}],\"group\":[{\"variant\":\"Large\",\"groups\":[\"beta\"]}],\"user\":[{\"variant\":\"Small\",\"users\":[\"Rachel\"]}],\"seed\":\"test-seed\",\"default_when_enabled\":\"Medium\",\"default_when_disabled\":\"Medium\"},\"telemetry\":{\"enabled\":true}}",
+        "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
+      }
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[concat(parameters('appConfigName'), '/', '.appconfig.featureflag~2FBackgroundColor')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
+      ],
+      "properties": {
+        "value": "{\"id\":\"BackgroundColor\",\"description\":\"\",\"enabled\":true,\"variants\":[{\"name\":\"Green\",\"configuration_value\":\"#364243\"},{\"name\":\"Blue\",\"configuration_value\":\"#214324\"},{\"name\":\"Red\",\"configuration_value\":\"#215242\"}],\"allocation\":{\"percentile\":[{\"variant\":\"Green\",\"from\":0,\"to\":33},{\"variant\":\"Blue\",\"from\":33,\"to\":66},{\"variant\":\"Red\",\"from\":66,\"to\":100}],\"default_when_enabled\":\"Green\",\"default_when_disabled\":\"Green\"},\"telemetry\":{\"enabled\":false}}",
+        "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
+      }
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[concat(parameters('appConfigName'), '/' , '.appconfig.featureflag~2FGreeting')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
+      ],
+      "properties": {
+        "value": "{\"id\":\"Greeting\",\"description\":\"\",\"enabled\":true,\"variants\":[{\"name\":\"On\",\"configuration_value\":true},{\"name\":\"Off\",\"configuration_value\":false}],\"allocation\":{\"percentile\":[{\"variant\":\"On\",\"from\":0,\"to\":50},{\"variant\":\"Off\",\"from\":50,\"to\":100}],\"default_when_enabled\":\"Off\",\"default_when_disabled\":\"Off\"},\"telemetry\":{\"enabled\":true}}",
+        "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
+      }
+    }
+  ],
+  "outputs": {
+    "appConfigName": {
+      "type": "string",
+      "value": "[parameters('appConfigName')]"
+    }
   }
+}

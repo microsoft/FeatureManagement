@@ -6,7 +6,9 @@
 import logging
 import json
 import unittest
+import os
 from pytest import raises
+from azure.appconfiguration.provider import load
 from featuremanagement import FeatureManager, TargetingContext
 
 FILE_PATH = "../../Samples/"
@@ -39,48 +41,18 @@ def convert_boolean_value(enabled):
     return enabled
 
 
-class TestFromFile(unittest.TestCase):
+class TestFromProvider(unittest.TestCase):
     # method: is_enabled
     def test_no_filters(self):
-        test_key = "NoFilters"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_time_window_filter(self):
-        test_key = "TimeWindowFilter"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_targeting_filter(self):
-        test_key = "TargetingFilter"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_targeting_filter_modified(self):
-        test_key = "TargetingFilter.modified"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_requirement_type(self):
-        test_key = "RequirementType"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_basic_variant(self):
-        test_key = "BasicVariant"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_variant_assignment(self):
-        test_key = "VariantAssignment"
+        test_key = "ProviderTelemetry"
         self.run_tests(test_key)
 
     @staticmethod
-    def load_from_file(file):
-        with open(FILE_PATH + file, "r", encoding="utf-8") as feature_flags_file:
-            feature_flags = json.load(feature_flags_file)
+    def load_from_provider():
+        connection_string = os.getenv("APP_CONFIG_VALIDATION_CONNECTION_STRING")
+        config = load(connection_string=connection_string, feature_flag_enabled=True)
 
-        feature_manager = FeatureManager(feature_flags)
+        feature_manager = FeatureManager(config)
         assert feature_manager is not None
 
         return feature_manager
