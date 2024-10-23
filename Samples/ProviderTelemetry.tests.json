@@ -1,27 +1,27 @@
 [
     {
-        "FeatureFlagName": "TelemetryVariant",
+        "FeatureFlagName": "Complete",
         "Inputs": {"user":"Aiden"},
         "IsEnabled": {
-            "Result": "false"
+            "Result": "true"
         },
         "Variant": {
-            "Result": "default"
+            "Result": 100
         },
         "Telemetry": {
             "event_name": "FeatureEvaluation",
             "event_properties": {
-                "FeatureName": "TelemetryVariant",
-                "Enabled": "False",
+                "FeatureName": "Complete",
+                "Enabled": "True",
                 "Version": "1.0.0",
-                "Variant": "True_Override",
-                "VariantAssignmentReason": "DefaultWhenEnabled",
-                "VariantAssignmentPercentage": "100",
-                "DefaultWhenEnabled": "True_Override",
-                "AllocationId": "MExY1waco2tqen4EcJKK",
-                "ETag": "cmwBRcIAq1jUyKL3Kj8bvf9jtxBrFg-R-ayExStMC90",
-                "FeatureFlagReference": "https://fake-config-store/kv/.appconfig.featureflag/TelemetryVariant",
-                "FeatureFlagId": "7vpkRJe452WVvlKXfA5XF3ASllwKsYZfC7D4w05rIoo",
+                "Variant": "Large",
+                "VariantAssignmentReason": "Percentile",
+                "VariantAssignmentPercentage": "30",
+                "DefaultWhenEnabled": "Medium",
+                "AllocationId": "DER2rF-ZYog95c4CBZoi",
+                "ETag": "9no6IpCxWQPlFpamQ9HbwhoDm0E157GN9xUEOtyz-xY",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Complete",
+                "FeatureFlagId": "3U5fo_c59GC_8JXZCyKB6O0CiDyuh3KfIqJ0-kAl7Gk",
                 "TargetingId": "Aiden"
             }
         },
