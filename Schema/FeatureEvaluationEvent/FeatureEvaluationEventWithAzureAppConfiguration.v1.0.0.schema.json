@@ -1,0 +1,38 @@
+{
+	"definitions": {},
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"$id": "http://azconfig.io/schemas/FeatureManagement/v1.0.0/FeatureEvaluationEventWithAzureAppConfiguration.json",
+	"type": "object",
+	"title": "A Feature Evaluation Event with Azure App Configuration",
+	"allOf": [
+		{
+			"$ref": "https://github.com/microsoft/FeatureManagement/blob/main/Schema/FeatureEvaluationEvent/FeatureEvaluationEvent.v1.0.0.schema.json"
+		}
+	],
+	"required": [
+		"FeatureFlagId",
+		"FeatureFlagReference",
+		"ETag"
+	],
+	"properties": {
+		"FeatureFlagId": {
+			"$id": "#/properties/FeatureFlagId",
+			"type": "string",
+			"title": "Feature Flag Id",
+			"description": "An ID for each feature flag based on the key and label that is then hashed with SHA 256 and encoded to base64 URL."
+		},
+		"FeatureFlagReference": {
+			"$id": "#/properties/FeatureFlagReference",
+			"type": "string",
+			"title": "Feature Flag Reference",
+			"description": "A URL used to trace back from a feature flag to a specific app configuration store it came from."
+		},
+		"ETag": {
+			"$id": "#/properties/ETag",
+			"type": "string",
+			"title": "ETag",
+			"description": "The ETag returned as part of the configuration setting for a feature flag."
+		}
+	}
+}
+	  
