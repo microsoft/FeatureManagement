@@ -16,7 +16,7 @@
       "examples": [
         "fancy-background"
       ],
-      "pattern": "^[^:%]*$"
+      "pattern": "^[^:\n\r%]*$"
     },
     "description": {
       "$id": "#/properties/description",

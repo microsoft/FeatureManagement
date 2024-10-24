@@ -28,7 +28,7 @@
             "Exception": "Invalid setting 'enabled' with value 'invalid' for feature 'InvalidEnabled'."
         },
         "Variant": {
-            "Result": null
+            "Exception": "Invalid setting 'enabled' with value 'invalid' for feature 'InvalidEnabled'."
         },
         "Description": "A Feature Flag with an invalid Enabled Value."
     },

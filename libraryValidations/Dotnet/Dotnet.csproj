@@ -16,10 +16,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\FeatureManagement-Dotnet\src\Microsoft.FeatureManagement\Microsoft.FeatureManagement.csproj" />
+    <PackageReference Include="Microsoft.FeatureManagement" Version="4.0.0-preview5" />
   </ItemGroup>
 
 </Project>

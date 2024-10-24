@@ -1,0 +1,58 @@
+{
+  "definitions": {},
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://azconfig.io/schemas/FeatureManagement/v1.0.0/FeatureEvaluationEvent.json",
+  "type": "object",
+  "title": "A Feature Evaluation Event",
+  "required": [
+    "FeatureName",
+    "Enabled",
+    "Variant",
+    "VariantAssignmentReason",
+    "TargetingId"
+  ],
+  "properties": {
+    "FeatureName": {
+      "$id": "#/properties/FeatureName",
+      "type": "string",
+      "title": "Feature Name",
+      "description": "The name of the feature flag being evaluated.",
+      "pattern": "^[^:\n\r%]*$"
+    },
+    "Enabled": {
+      "$id": "#/properties/Enabled",
+      "type": "boolean",
+      "title": "Feature Enabled",
+      "description": "Whether the feature flag is evaluated as enabled."
+    },
+    "Variant": {
+      "$id": "#/properties/Variant",
+      "type": "string",
+      "title": "Assigned Variant",
+      "description": "The assigned variant during the feature evaluation.",
+      "pattern":  "^(.*)$"
+    },
+    "VariantAssignmentReason": {
+      "$id": "#/properties/VariantAssignmentReason",
+      "type": "string",
+      "title": "Variant Assignment Reason",
+      "description": "The reason why the variant is assigned during the feature evaluation.",
+      "enum": [
+        "None",
+        "DefaultWhenDisabled",
+        "DefaultWhenEnabled",
+        "User",
+        "Group",
+        "Percentile"
+      ]
+    },
+    "TargetingId": {
+      "$id": "#/properties/TargetingId",
+      "type": "string",
+      "title": "Targeting Id",
+      "description": "The targeting id used for the feature evaluation.",
+      "pattern": "^(.*)$"
+    }
+  }
+}
+    

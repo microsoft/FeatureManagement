@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet", "Dotnet.csproj", "{F19DEACC-9B50-45D3-80F2-C619344722D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.FeatureManagement", "..\..\..\FeatureManagement-Dotnet\src\Microsoft.FeatureManagement\Microsoft.FeatureManagement.csproj", "{4AFA1500-ED4C-468F-9186-2790EC6A3AF3}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,10 +15,6 @@ Global
 		{F19DEACC-9B50-45D3-80F2-C619344722D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F19DEACC-9B50-45D3-80F2-C619344722D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F19DEACC-9B50-45D3-80F2-C619344722D9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4AFA1500-ED4C-468F-9186-2790EC6A3AF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4AFA1500-ED4C-468F-9186-2790EC6A3AF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4AFA1500-ED4C-468F-9186-2790EC6A3AF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4AFA1500-ED4C-468F-9186-2790EC6A3AF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,8 +15,6 @@ public class Tests
     private const string SampleJsonKey = ".sample.json";
     private const string TestsJsonKey = ".tests.json";
 
-    public required IFeatureManager featureManager;
-
     [TestMethod]
     public async Task TestNoFilters()
     {
@@ -71,7 +69,7 @@ public class Tests
                 .AddFeatureManagement();
 
         ServiceProvider serviceProvider = services.BuildServiceProvider();
-        featureManager = serviceProvider.GetRequiredService<IFeatureManager>();
+        IVariantFeatureManager featureManager = serviceProvider.GetRequiredService<IVariantFeatureManager>();
 
         // Get Test Suite JSON
         var featureFlagTests = JsonSerializer.Deserialize<SharedTest[]>(File.ReadAllText(FilePath + testKey + TestsJsonKey));
@@ -83,20 +81,36 @@ public class Tests
         // Run each test
         foreach (var featureFlagTest in featureFlagTests)
         {
-            bool? expectedIsEnabledResult = featureFlagTest.IsEnabled?.Result != null ? Convert.ToBoolean(featureFlagTest.IsEnabled?.Result) : null;
             string featureFlagId = testKey + "." + featureFlagTest.FeatureFlagName;
             string failedDescription = $"Test {featureFlagId} failed. Description: {featureFlagTest.Description}";
 
+            // IsEnabledAsync
             if (featureFlagTest.IsEnabled != null)
             {
-                if (expectedIsEnabledResult != null)
+                bool? expectedIsEnabledResult = featureFlagTest.IsEnabled.Result != null ? Convert.ToBoolean(featureFlagTest.IsEnabled.Result) : null;
+
+                if (featureFlagTest.IsEnabled.Exception != null)
+                {
+                    await Assert.ThrowsExceptionAsync<FeatureManagementException>(async () => await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName), featureFlagTest.IsEnabled.Exception);
+                }
+                else
                 {
                     bool isEnabledResult = await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.user, Groups = featureFlagTest.Inputs.groups });
                     Assert.AreEqual(expectedIsEnabledResult, isEnabledResult, failedDescription);
                 }
+            }
+
+            // GetVariantAsync
+            if (featureFlagTest.Variant != null)
+            {
+                if (featureFlagTest.Variant.Exception != null)
+                {
+                    await Assert.ThrowsExceptionAsync<FeatureManagementException>(async () => await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName), featureFlagTest.Variant.Exception);
+                }
                 else
                 {
-                    await Assert.ThrowsExceptionAsync<FeatureManagementException>(async () => await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName), featureFlagTest.IsEnabled.Exception);
+                    Variant variantResult = await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.user, Groups = featureFlagTest.Inputs.groups });
+                    Assert.AreEqual(featureFlagTest.Variant.Result, variantResult?.Configuration.Value, failedDescription);
                 }
             }
         }

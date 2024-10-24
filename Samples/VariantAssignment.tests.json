@@ -1,0 +1,150 @@
+[
+    {
+        "FeatureFlagName": "UserAssignedVariant",
+        "Inputs": {
+            "user": "Britney"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Beta."
+        },
+        "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
+    },
+    {
+        "FeatureFlagName": "UserAssignedVariant",
+        "Inputs": {
+            "user": "Adam"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
+    },
+    {
+        "FeatureFlagName": "GroupAssignedVariant",
+        "Inputs": {
+            "user": "Britney",
+            "groups": ["Ring2"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Beta."
+        },
+        "Description": "A Feature Flag with two Variants, one for Ring1 and one for Ring2."
+    },
+    {
+        "FeatureFlagName": "GroupAssignedVariant",
+        "Inputs": {
+            "user": "Britney",
+            "groups": ["Ring1"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, one for Ring1 and one for Ring2."
+    },
+    {
+        "FeatureFlagName": "AllocationAssignedVariant",
+        "Inputs": {
+            "user": "Britney"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Beta."
+        },
+        "Description": "A Feature Flag with two Variants, each with 50%."
+    },
+    {
+        "FeatureFlagName": "AllocationAssignedVariant",
+        "Inputs": {
+            "user": "Adam"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, each with 50%."
+    },
+    {
+        "FeatureFlagName": "ComplexAssignment",
+        "Inputs": {
+            "user": "Adam"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
+    },
+    {
+        "FeatureFlagName": "ComplexAssignment",
+        "Inputs": {
+            "user": "Britney"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Beta."
+        },
+        "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
+    },
+    {
+        "FeatureFlagName": "ComplexAssignment",
+        "Inputs": {
+            "user": "John",
+            "groups": ["Ring1"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
+    },
+    {
+        "FeatureFlagName": "ComplexAssignment",
+        "Inputs": {
+            "user": "Jane",
+            "groups": ["Ring3"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Alpha."
+        },
+        "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
+    },
+    {
+        "FeatureFlagName": "ComplexAssignment",
+        "Inputs": {
+            "user": "Selena",
+            "groups": ["Ring4"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": "The Variant Beta."
+        },
+        "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
+    }
+]
