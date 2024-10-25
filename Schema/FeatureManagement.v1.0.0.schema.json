@@ -13,19 +13,8 @@
             "type": "object",
             "title": "Feature Management",
             "description": "Declares feature management configuration.",
-            "required": [
-                "feature_flags"
-            ],
-            "properties": {
-                "feature_flags": {
-                    "$id": "#/properties/feature_management/properties/feature_flags",
-                    "type": "array",
-                    "title": "Feature Flags",
-                    "description": "Declares feature flags based on Microsoft Feature Flag schema.",
-                    "items": {
-                        "$ref": "https://raw.githubusercontent.com/Azure/AppConfiguration/main/docs/FeatureManagement/FeatureFlag.v1.1.0.schema.json"
-                    }
-                }
+            "additionalProperties": {
+                "$ref": "https://github.com/microsoft/FeatureManagement/blob/c5fab16dbf1450dce0bbfe7c4207da735ff31916/Schema/FeatureFlag.v1.1.0.schema.json"
             }
         }
     }
