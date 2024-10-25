@@ -63,15 +63,15 @@
       },
       "properties": {
         "publicNetworkAccess": "Enabled",
+        "encryption": {},
+        "disableLocalAuth": false,
+        "softDeleteRetentionInDays": 7,
+        "enablePurgeProtection": false,
+        "dataPlaneProxy": {
+          "authenticationMode": "Local",
+          "privateLinkDelegation": "Disabled"
+        },
         "telemetry": {
-          "encryption": {},
-          "disableLocalAuth": false,
-          "softDeleteRetentionInDays": 7,
-          "enablePurgeProtection": false,
-          "dataPlaneProxy": {
-            "authenticationMode": "Local",
-            "privateLinkDelegation": "Disabled"
-          },
           "resourceId": "[resourceId('Microsoft.Insights/components', parameters('appInsightsName'))]"
         }
       },

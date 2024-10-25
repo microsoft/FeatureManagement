@@ -4,7 +4,6 @@
 # license information.
 # --------------------------------------------------------------------------
 from unittest.mock import patch
-import logging
 import json
 import unittest
 import os
@@ -26,10 +25,6 @@ USER_KEY = "user"
 GROUPS_KEY = "groups"
 EXCEPTION_KEY = "Exception"
 DESCRIPTION_KEY = "Description"
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 def convert_boolean_value(enabled):
     if enabled is None:
@@ -95,9 +90,7 @@ class TestFromProvider(unittest.TestCase):
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
                 variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
-                if not variant:
-                    logger.error(f"Variant is None for {feature_flag_id}")
-                    assert False, failed_description
+                assert variant, failed_description
                 assert variant.configuration == get_variant[RESULT_KEY], failed_description
 
                 if telemetry:
