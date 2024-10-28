@@ -1,9 +1,4 @@
-﻿using Microsoft.FeatureManagement;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Dotnet
 {
@@ -30,8 +25,13 @@ namespace Dotnet
 
         internal class VariantSection
         {
-            public string Result { get; set; }
+            public VariantResultSection Result { get; set; }
             public string Exception { get; set; }
+        }
+
+        internal class VariantResultSection
+        {
+            public object ConfigurationValue { get; set; }
         }
     }
 }

@@ -72,7 +72,10 @@ public class Tests
         IVariantFeatureManager featureManager = serviceProvider.GetRequiredService<IVariantFeatureManager>();
 
         // Get Test Suite JSON
-        var featureFlagTests = JsonSerializer.Deserialize<SharedTest[]>(File.ReadAllText(FilePath + testKey + TestsJsonKey));
+        var featureFlagTests = JsonSerializer.Deserialize<SharedTest[]>(File.ReadAllText(FilePath + testKey + TestsJsonKey), new JsonSerializerOptions
+        {
+            Converters = { new UnknownJsonFieldConverter() }
+        });
 
         if (featureFlagTests == null) {
             throw new Exception("Test failed to parse JSON");
@@ -110,7 +113,19 @@ public class Tests
                 else
                 {
                     Variant variantResult = await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.user, Groups = featureFlagTest.Inputs.groups });
-                    Assert.AreEqual(featureFlagTest.Variant.Result, variantResult?.Configuration.Value, failedDescription);
+                    
+                    if (featureFlagTest.Variant.Result == null) {
+                        Assert.IsNull(variantResult);
+                    } else {
+                        if (featureFlagTest.Variant.Result.ConfigurationValue is string value)
+                        {
+                            Assert.AreEqual(value, variantResult?.Configuration.Value, failedDescription);
+                        } 
+                        else 
+                        {
+                            Assert.Fail();
+                        }
+                    }
                 }
             }
         }

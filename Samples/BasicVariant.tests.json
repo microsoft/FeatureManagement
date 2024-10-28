@@ -6,7 +6,9 @@
             "Result": "false"
         },
         "Variant": {
-            "Result": "default"
+            "Result": {
+                "ConfigurationValue": "default"
+            }
         },
         "Description": "An Enabled Feature Flag with no Filters."
     },
@@ -17,7 +19,9 @@
             "Result": "false"
         },
         "Variant": {
-            "Result": "default"
+            "Result": {
+                "ConfigurationValue": "default"
+            }
         },
         "Description": "A Disabled Feature Flag with no Filters."
     },
@@ -30,7 +34,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
     },
@@ -43,7 +49,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Beta."
+            "Result": {
+                "ConfigurationValue": "The Variant Beta."
+            }
         },
         "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
     }

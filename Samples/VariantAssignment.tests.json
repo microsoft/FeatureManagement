@@ -8,7 +8,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Beta."
+            "Result": {
+                "ConfigurationValue": "The Variant Beta."
+            }
         },
         "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
     },
@@ -21,7 +23,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, one for Adam and one for Britney."
     },
@@ -35,7 +39,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Beta."
+            "Result": {
+                "ConfigurationValue": "The Variant Beta."
+            }
         },
         "Description": "A Feature Flag with two Variants, one for Ring1 and one for Ring2."
     },
@@ -49,7 +55,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, one for Ring1 and one for Ring2."
     },
@@ -62,7 +70,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Beta."
+            "Result": {
+                "ConfigurationValue": "The Variant Beta."
+            }
         },
         "Description": "A Feature Flag with two Variants, each with 50%."
     },
@@ -75,7 +85,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, each with 50%."
     },
@@ -88,7 +100,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
     },
@@ -101,7 +115,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Beta."
+            "Result": {
+                "ConfigurationValue": "The Variant Beta."
+            }
         },
         "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
     },
@@ -115,7 +131,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
     },
@@ -129,7 +147,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Alpha."
+            "Result": {
+                "ConfigurationValue": "The Variant Alpha."
+            }
         },
         "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
     },
@@ -143,7 +163,9 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": "The Variant Beta."
+            "Result": {
+                "ConfigurationValue": "The Variant Beta."
+            }
         },
         "Description": "A Feature Flag with two Variants, with user, group, and percientile assignment."
     }

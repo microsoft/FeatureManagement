@@ -17,6 +17,7 @@ FRIENDLY_NAME_KEY = "FriendlyName"
 IS_ENABLED_KEY = "IsEnabled"
 GET_VARIANT_KEY = "Variant"
 RESULT_KEY = "Result"
+CONFIGURATION_VALUE_KEY = "ConfigurationValue"
 FEATURE_FLAG_NAME_KEY = "FeatureFlagName"
 INPUTS_KEY = "Inputs"
 USER_KEY = "user"
@@ -117,9 +118,12 @@ class TestFromFile(unittest.TestCase):
                 expected_message = is_enabled.get(EXCEPTION_KEY)
                 assert str(ex_info.value) == expected_message, failed_description
 
-            if get_variant is not None and get_variant[RESULT_KEY]:
+            if get_variant is not None and RESULT_KEY in get_variant:
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
                 variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
 
-                assert variant.configuration == get_variant[RESULT_KEY], failed_description
+                if get_variant[RESULT_KEY] == None:
+                    assert variant == None
+                else:
+                    assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description
