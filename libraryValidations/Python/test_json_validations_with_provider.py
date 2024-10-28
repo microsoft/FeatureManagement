@@ -3,11 +3,14 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
-import logging
+from unittest.mock import patch
 import json
 import unittest
+import os
 from pytest import raises
+from azure.appconfiguration.provider import load
 from featuremanagement import FeatureManager, TargetingContext
+from featuremanagement.azuremonitor import publish_telemetry
 
 FILE_PATH = "../../Samples/"
 SAMPLE_JSON_KEY = ".sample.json"
@@ -23,10 +26,6 @@ GROUPS_KEY = "groups"
 EXCEPTION_KEY = "Exception"
 DESCRIPTION_KEY = "Description"
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-
 def convert_boolean_value(enabled):
     if enabled is None:
         return None
@@ -39,55 +38,26 @@ def convert_boolean_value(enabled):
     return enabled
 
 
-class TestFromFile(unittest.TestCase):
+class TestFromProvider(unittest.TestCase):
     # method: is_enabled
     def test_no_filters(self):
-        test_key = "NoFilters"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_time_window_filter(self):
-        test_key = "TimeWindowFilter"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_targeting_filter(self):
-        test_key = "TargetingFilter"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_targeting_filter_modified(self):
-        test_key = "TargetingFilter.modified"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_requirement_type(self):
-        test_key = "RequirementType"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_basic_variant(self):
-        test_key = "BasicVariant"
-        self.run_tests(test_key)
-
-    # method: is_enabled
-    def test_variant_assignment(self):
-        test_key = "VariantAssignment"
-        self.run_tests(test_key)
+        test_key = "ProviderTelemetry"
+        with patch("featuremanagement.azuremonitor._send_telemetry.azure_monitor_track_event") as mock_track_event:
+            self.run_tests(test_key, mock_track_event)
 
     @staticmethod
-    def load_from_file(file):
-        with open(FILE_PATH + file, "r", encoding="utf-8") as feature_flags_file:
-            feature_flags = json.load(feature_flags_file)
+    def load_from_provider():
+        connection_string = os.getenv("APP_CONFIG_VALIDATION_CONNECTION_STRING")
+        config = load(connection_string=connection_string, selects=[], feature_flag_enabled=True)
 
-        feature_manager = FeatureManager(feature_flags)
+        feature_manager = FeatureManager(config, on_feature_evaluated=publish_telemetry)
         assert feature_manager is not None
 
         return feature_manager
 
     # method: is_enabled
-    def run_tests(self, test_key):
-        feature_manager = self.load_from_file(test_key + SAMPLE_JSON_KEY)
+    def run_tests(self, test_key, track_event_mock):
+        feature_manager = self.load_from_provider()
 
         with open(FILE_PATH + test_key + TESTS_JSON_KEY, "r", encoding="utf-8") as feature_flag_test_file:
             feature_flag_tests = json.load(feature_flag_test_file)
@@ -97,6 +67,7 @@ class TestFromFile(unittest.TestCase):
             get_variant = feature_flag_test.get(GET_VARIANT_KEY, None)
             expected_is_enabled_result = convert_boolean_value(is_enabled.get(RESULT_KEY))
             feature_flag_id = test_key + "." + feature_flag_test[FEATURE_FLAG_NAME_KEY]
+            telemetry = feature_flag_test.get("Telemetry", None)
 
             failed_description = f"Test {feature_flag_id} failed. Description: {feature_flag_test[DESCRIPTION_KEY]}"
 
@@ -119,7 +90,28 @@ class TestFromFile(unittest.TestCase):
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
                 variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
-                if not variant:
-                    logger.error(f"Variant is None for {feature_flag_id}")
-                    assert False, failed_description
+                assert variant, failed_description
                 assert variant.configuration == get_variant[RESULT_KEY], failed_description
+
+                if telemetry:
+                    assert track_event_mock.called
+                    assert track_event_mock.call_count == 2
+                    assert track_event_mock.call_args[0][0] == telemetry["event_name"]
+                    assert track_event_mock.call_args[0][1]["FeatureName"] == telemetry["event_properties"]["FeatureName"]
+                    assert track_event_mock.call_args[0][1]["Enabled"] == telemetry["event_properties"]["Enabled"]
+                    assert track_event_mock.call_args[0][1]["Version"] == telemetry["event_properties"]["Version"]
+                    assert track_event_mock.call_args[0][1]["Variant"] == telemetry["event_properties"]["Variant"]
+                    assert track_event_mock.call_args[0][1]["VariantAssignmentReason"] == telemetry["event_properties"]["VariantAssignmentReason"]
+                    assert track_event_mock.call_args[0][1]["VariantAssignmentPercentage"] == telemetry["event_properties"]["VariantAssignmentPercentage"]
+                    assert track_event_mock.call_args[0][1]["DefaultWhenEnabled"] == telemetry["event_properties"]["DefaultWhenEnabled"]
+                    assert track_event_mock.call_args[0][1]["ETag"] == telemetry["event_properties"]["ETag"]
+                    connection_string = os.getenv("APP_CONFIG_VALIDATION_CONNECTION_STRING")
+                    endpoint = endpoint_from_connection_string(connection_string)
+                    assert track_event_mock.call_args[0][1]["FeatureFlagReference"] ==  endpoint + telemetry["event_properties"]["FeatureFlagReference"]
+                    assert track_event_mock.call_args[0][1]["FeatureFlagId"].decode("utf-8") == telemetry["event_properties"]["FeatureFlagId"]
+                    assert track_event_mock.call_args[0][1]["AllocationId"] == telemetry["event_properties"]["AllocationId"]
+                    assert track_event_mock.call_args[0][1]["TargetingId"] == telemetry["event_properties"]["TargetingId"]
+
+
+def endpoint_from_connection_string(connection_string):
+    return connection_string.split("Endpoint=")[1].split(";")[0]
