@@ -63,6 +63,7 @@ class TestFromProvider(unittest.TestCase):
             feature_flag_tests = json.load(feature_flag_test_file)
 
         for feature_flag_test in feature_flag_tests:
+            track_event_mock.reset_mock()
             is_enabled = feature_flag_test[IS_ENABLED_KEY]
             get_variant = feature_flag_test.get(GET_VARIANT_KEY, None)
             expected_is_enabled_result = convert_boolean_value(is_enabled.get(RESULT_KEY))
@@ -104,7 +105,7 @@ class TestFromProvider(unittest.TestCase):
                     assert track_event_mock.call_args[0][1]["VariantAssignmentReason"] == telemetry["event_properties"]["VariantAssignmentReason"]
                     assert track_event_mock.call_args[0][1]["VariantAssignmentPercentage"] == telemetry["event_properties"]["VariantAssignmentPercentage"]
                     assert track_event_mock.call_args[0][1]["DefaultWhenEnabled"] == telemetry["event_properties"]["DefaultWhenEnabled"]
-                    assert track_event_mock.call_args[0][1]["ETag"] == telemetry["event_properties"]["ETag"]
+                    assert track_event_mock.call_args[0][1]["ETag"] # ETag will be different for each store, just assert it exists
                     connection_string = os.getenv("APP_CONFIG_VALIDATION_CONNECTION_STRING")
                     endpoint = endpoint_from_connection_string(connection_string)
                     assert track_event_mock.call_args[0][1]["FeatureFlagReference"] ==  endpoint + telemetry["event_properties"]["FeatureFlagReference"]

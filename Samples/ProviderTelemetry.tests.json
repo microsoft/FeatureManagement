@@ -1,7 +1,9 @@
 [
     {
         "FeatureFlagName": "Complete",
-        "Inputs": {"user":"Aiden"},
+        "Inputs": {
+            "user": "Aiden"
+        },
         "IsEnabled": {
             "Result": "true"
         },
@@ -18,13 +20,112 @@
                 "VariantAssignmentReason": "Percentile",
                 "VariantAssignmentPercentage": "30",
                 "DefaultWhenEnabled": "Medium",
-                "AllocationId": "CgBF0x9j_Ip5ccCrdiNO",
-                "ETag": "9no6IpCxWQPlFpamQ9HbwhoDm0E157GN9xUEOtyz-xY",
+                "AllocationId": "DER2rF-ZYog95c4CBZoi",
                 "FeatureFlagReference": "/kv/.appconfig.featureflag/Complete",
                 "FeatureFlagId": "3U5fo_c59GC_8JXZCyKB6O0CiDyuh3KfIqJ0-kAl7Gk",
                 "TargetingId": "Aiden"
             }
         },
         "Description": "A basic feature flag with telemetry."
+    },
+    {
+        "FeatureFlagName": "TelemetryVariantPercentile",
+        "Inputs": {
+            "user": "Sami"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {
+                "someOtherKey": {
+                    "someSubKey": "someSubValue"
+                },
+                "someKey4": [
+                    3,
+                    1,
+                    4,
+                    true
+                ],
+                "someKey": "someValue",
+                "someKey3": 3.14,
+                "someKey2": 3
+            }
+        },
+        "Telemetry": {
+            "event_name": "FeatureEvaluation",
+            "event_properties": {
+                "FeatureName": "TelemetryVariantPercentile",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "True_Override",
+                "VariantAssignmentReason": "Percentile",
+                "VariantAssignmentPercentage": "100",
+                "DefaultWhenEnabled": "True_Override",
+                "AllocationId": "YsdJ4pQpmhYa8KEhRLUn",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/TelemetryVariantPercentile",
+                "FeatureFlagId": "y3s-SF-wP8w4EseOSP6jsgAMj1NhBZbg5TBrpfFWuas",
+                "TargetingId": "Sami"
+            }
+        },
+        "Description": "A Feature Flag with a single variant with 100 allocation to that variant."
+    },
+    {
+        "FeatureFlagName": "Background.Colors",
+        "Inputs": {
+            "user": "Aiden"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {"b": 130, "g": 0, "r": 75}
+        },
+        "Telemetry": {
+            "event_name": "FeatureEvaluation",
+            "event_properties": {
+                "FeatureName": "Background.Colors",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "Indigo",
+                "VariantAssignmentReason": "Percentile",
+                "VariantAssignmentPercentage": "5",
+                "DefaultWhenEnabled": "Red",
+                "AllocationId": "b2YEkuhXFJiF5MNrPAgx",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Background.Colors",
+                "FeatureFlagId": "0HFeUYqChhP4fKdUa_i0Q34NUH5PT4MqtfbQZw2UdEs",
+                "TargetingId": "Aiden"
+            }
+        },
+        "Description": "A basic feature flag with lots of variants."
+    },
+    {
+        "FeatureFlagName": "Background.Colors",
+        "Inputs": {
+            "user": "Brittney"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {"b": 0, "g": 162, "r": 255}
+        },
+        "Telemetry": {
+            "event_name": "FeatureEvaluation",
+            "event_properties": {
+                "FeatureName": "Background.Colors",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "Orange",
+                "VariantAssignmentReason": "Percentile",
+                "VariantAssignmentPercentage": "5",
+                "DefaultWhenEnabled": "Red",
+                "AllocationId": "b2YEkuhXFJiF5MNrPAgx",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Background.Colors",
+                "FeatureFlagId": "0HFeUYqChhP4fKdUa_i0Q34NUH5PT4MqtfbQZw2UdEs",
+                "TargetingId": "Brittney"
+            }
+        },
+        "Description": "A basic feature flag with lots of variants."
     }
 ]
