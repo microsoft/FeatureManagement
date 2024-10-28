@@ -79,7 +79,7 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": {"b": 130, "g": 0, "r": 75}
+            "Result": {"r": 75, "g": 0, "b": 130}
         },
         "Telemetry": {
             "event_name": "FeatureEvaluation",
@@ -108,7 +108,7 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": {"b": 0, "g": 162, "r": 255}
+            "Result": {"r": 255, "g": 162, "b": 0}
         },
         "Telemetry": {
             "event_name": "FeatureEvaluation",
