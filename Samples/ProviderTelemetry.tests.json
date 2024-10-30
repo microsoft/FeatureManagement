@@ -2,7 +2,7 @@
     {
         "FeatureFlagName": "TelemetryVariantPercentile",
         "Inputs": {
-            "user": "Sami"
+            "User": "Sami"
         },
         "IsEnabled": {
             "Result": "true"
@@ -44,7 +44,7 @@
     {
         "FeatureFlagName": "Background.Colors",
         "Inputs": {
-            "user": "Aiden"
+            "User": "Aiden"
         },
         "IsEnabled": {
             "Result": "true"
@@ -73,7 +73,7 @@
     {
         "FeatureFlagName": "Background.Colors",
         "Inputs": {
-            "user": "Brittney"
+            "User": "Brittney"
         },
         "IsEnabled": {
             "Result": "true"

@@ -2,7 +2,7 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Aiden"
+            "Users": "Aiden"
         },
         "IsEnabled": {
             "Result": "true"
@@ -31,7 +31,7 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Rachel"
+            "Users": "Rachel"
         },
         "IsEnabled": {
             "Result": "true"
@@ -59,8 +59,8 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Aiden",
-            "groups": ["beta"]
+            "Users": "Aiden",
+            "Groups": ["beta"]
         },
         "IsEnabled": {
             "Result": "true"
@@ -88,7 +88,7 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Rachel",
+            "Users": "Rachel",
             "group": "beta"
         },
         "IsEnabled": {
