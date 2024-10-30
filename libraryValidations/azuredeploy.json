@@ -114,6 +114,30 @@
         "value": "{\"id\":\"Greeting\",\"description\":\"\",\"enabled\":true,\"variants\":[{\"name\":\"On\",\"configuration_value\":true},{\"name\":\"Off\",\"configuration_value\":false}],\"allocation\":{\"percentile\":[{\"variant\":\"On\",\"from\":0,\"to\":50},{\"variant\":\"Off\",\"from\":50,\"to\":100}],\"default_when_enabled\":\"Off\",\"default_when_disabled\":\"Off\"},\"telemetry\":{\"enabled\":true}}",
         "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
       }
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[concat(parameters('appConfigName'), '/' , '.appconfig.featureflag~2FTelemetryVariantPercentile')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
+      ],
+      "properties": {
+        "value": "{\"id\":\"TelemetryVariantPercentile\",\"enabled\":true,\"variants\":[{\"name\":\"True_Override\",\"configuration_value\":{\"someOtherKey\":{\"someSubKey\":\"someSubValue\"},\"someKey4\":[3,1,4,true],\"someKey\":\"someValue\",\"someKey3\":3.14,\"someKey2\":3}}],\"allocation\":{\"default_when_enabled\":\"True_Override\",\"percentile\":[{\"variant\":\"True_Override\",\"from\":0,\"to\":100}]},\"telemetry\":{\"enabled\":true}}",
+        "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
+      }
+    },
+    {
+      "type": "Microsoft.AppConfiguration/configurationStores/keyValues",
+      "apiVersion": "2021-03-01-preview",
+      "name": "[concat(parameters('appConfigName'), '/' , '.appconfig.featureflag~2FBackground.Colors')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.AppConfiguration/configurationStores', parameters('appConfigName'))]"
+      ],
+      "properties": {
+        "value": "{\"id\":\"Background.Colors\",\"description\":\"\",\"enabled\":true,\"variants\":[{\"name\":\"Red\",\"configuration_value\":{\"r\":255,\"g\":0,\"b\":0}},{\"name\":\"Green\",\"configuration_value\":{\"r\":0,\"g\":255,\"b\":0}},{\"name\":\"Blue\",\"configuration_value\":{\"r\":0,\"g\":0,\"b\":255}},{\"name\":\"Yellow\",\"configuration_value\":{\"r\":255,\"g\":255,\"b\":0}},{\"name\":\"Cyan\",\"configuration_value\":{\"r\":0,\"g\":255,\"b\":255}},{\"name\":\"Magenta\",\"configuration_value\":{\"r\":255,\"g\":0,\"b\":255}},{\"name\":\"Orange\",\"configuration_value\":{\"r\":255,\"g\":162,\"b\":0}},{\"name\":\"Purple\",\"configuration_value\":{\"r\":128,\"g\":0,\"b\":128}},{\"name\":\"Pink\",\"configuration_value\":{\"r\":255,\"g\":192,\"b\":203}},{\"name\":\"Brown\",\"configuration_value\":{\"r\":165,\"g\":42,\"b\":42}},{\"name\":\"Black\",\"configuration_value\":{\"r\":0,\"g\":0,\"b\":0}},{\"name\":\"White\",\"configuration_value\":{\"r\":255,\"g\":255,\"b\":255}},{\"name\":\"Gray\",\"configuration_value\":{\"r\":128,\"g\":128,\"b\":128}},{\"name\":\"Lime\",\"configuration_value\":{\"r\":50,\"g\":205,\"b\":50}},{\"name\":\"Indigo\",\"configuration_value\":{\"r\":75,\"g\":0,\"b\":130}},{\"name\":\"Violet\",\"configuration_value\":{\"r\":238,\"g\":130,\"b\":238}},{\"name\":\"Gold\",\"configuration_value\":{\"r\":255,\"g\":215,\"b\":0}},{\"name\":\"Silver\",\"configuration_value\":{\"r\":192,\"g\":192,\"b\":192}},{\"name\":\"Teal\",\"configuration_value\":{\"r\":0,\"g\":128,\"b\":128}},{\"name\":\"Navy\",\"configuration_value\":{\"r\":0,\"g\":0,\"b\":128}}],\"allocation\":{\"percentile\":[{\"variant\":\"Red\",\"from\":0,\"to\":5},{\"variant\":\"Green\",\"from\":5,\"to\":10},{\"variant\":\"Blue\",\"from\":10,\"to\":15},{\"variant\":\"Yellow\",\"from\":15,\"to\":20},{\"variant\":\"Cyan\",\"from\":20,\"to\":25},{\"variant\":\"Magenta\",\"from\":25,\"to\":30},{\"variant\":\"Orange\",\"from\":30,\"to\":35},{\"variant\":\"Purple\",\"from\":35,\"to\":40},{\"variant\":\"Pink\",\"from\":40,\"to\":45},{\"variant\":\"Brown\",\"from\":45,\"to\":50},{\"variant\":\"Black\",\"from\":50,\"to\":55},{\"variant\":\"White\",\"from\":55,\"to\":60},{\"variant\":\"Gray\",\"from\":60,\"to\":65},{\"variant\":\"Lime\",\"from\":65,\"to\":70},{\"variant\":\"Indigo\",\"from\":70,\"to\":75},{\"variant\":\"Violet\",\"from\":75,\"to\":80},{\"variant\":\"Gold\",\"from\":80,\"to\":85},{\"variant\":\"Silver\",\"from\":85,\"to\":90},{\"variant\":\"Teal\",\"from\":90,\"to\":95},{\"variant\":\"Navy\",\"from\":95,\"to\":100}],\"seed\":\"Rainbow\",\"default_when_enabled\":\"Red\",\"default_when_disabled\":\"Red\"},\"telemetry\":{\"enabled\":true}}",
+        "contentType": "application/vnd.microsoft.appconfig.ff+json;charset=utf-8"
+      }
     }
   ],
   "outputs": {

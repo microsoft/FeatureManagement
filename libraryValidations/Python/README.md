@@ -12,7 +12,7 @@ To run the tests, execute the following command:
 
 ```bash
 pip install -r requirements.txt
-python test_json_validations.py
+pytest test_json_validations.py
 ```
 
 ## Update to run more tests

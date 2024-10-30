@@ -39,9 +39,14 @@ def convert_boolean_value(enabled):
 
 
 class TestFromProvider(unittest.TestCase):
-    # method: is_enabled
-    def test_no_filters(self):
+
+    def test_provider_telemetry(self):
         test_key = "ProviderTelemetry"
+        with patch("featuremanagement.azuremonitor._send_telemetry.azure_monitor_track_event") as mock_track_event:
+            self.run_tests(test_key, mock_track_event)
+
+    def test_complete_provider_telemetry(self):
+        test_key = "ProviderTelemetryComplete"
         with patch("featuremanagement.azuremonitor._send_telemetry.azure_monitor_track_event") as mock_track_event:
             self.run_tests(test_key, mock_track_event)
 
@@ -55,7 +60,7 @@ class TestFromProvider(unittest.TestCase):
 
         return feature_manager
 
-    # method: is_enabled
+
     def run_tests(self, test_key, track_event_mock):
         feature_manager = self.load_from_provider()
 
@@ -63,6 +68,7 @@ class TestFromProvider(unittest.TestCase):
             feature_flag_tests = json.load(feature_flag_test_file)
 
         for feature_flag_test in feature_flag_tests:
+            track_event_mock.reset_mock()
             is_enabled = feature_flag_test[IS_ENABLED_KEY]
             get_variant = feature_flag_test.get(GET_VARIANT_KEY, None)
             expected_is_enabled_result = convert_boolean_value(is_enabled.get(RESULT_KEY))
@@ -97,20 +103,27 @@ class TestFromProvider(unittest.TestCase):
                     assert track_event_mock.called
                     assert track_event_mock.call_count == 2
                     assert track_event_mock.call_args[0][0] == telemetry["event_name"]
-                    assert track_event_mock.call_args[0][1]["FeatureName"] == telemetry["event_properties"]["FeatureName"]
-                    assert track_event_mock.call_args[0][1]["Enabled"] == telemetry["event_properties"]["Enabled"]
-                    assert track_event_mock.call_args[0][1]["Version"] == telemetry["event_properties"]["Version"]
-                    assert track_event_mock.call_args[0][1]["Variant"] == telemetry["event_properties"]["Variant"]
-                    assert track_event_mock.call_args[0][1]["VariantAssignmentReason"] == telemetry["event_properties"]["VariantAssignmentReason"]
-                    assert track_event_mock.call_args[0][1]["VariantAssignmentPercentage"] == telemetry["event_properties"]["VariantAssignmentPercentage"]
-                    assert track_event_mock.call_args[0][1]["DefaultWhenEnabled"] == telemetry["event_properties"]["DefaultWhenEnabled"]
-                    assert track_event_mock.call_args[0][1]["ETag"] == telemetry["event_properties"]["ETag"]
+
+                    event = track_event_mock.call_args[0][1]
+                    event_properties = telemetry["event_properties"]
                     connection_string = os.getenv("APP_CONFIG_VALIDATION_CONNECTION_STRING")
                     endpoint = endpoint_from_connection_string(connection_string)
-                    assert track_event_mock.call_args[0][1]["FeatureFlagReference"] ==  endpoint + telemetry["event_properties"]["FeatureFlagReference"]
-                    assert track_event_mock.call_args[0][1]["FeatureFlagId"].decode("utf-8") == telemetry["event_properties"]["FeatureFlagId"]
-                    assert track_event_mock.call_args[0][1]["AllocationId"] == telemetry["event_properties"]["AllocationId"]
-                    assert track_event_mock.call_args[0][1]["TargetingId"] == telemetry["event_properties"]["TargetingId"]
+
+                    assert event["FeatureName"] == event_properties["FeatureName"]
+                    assert event["Enabled"] == event_properties["Enabled"]
+                    assert event["Version"] == event_properties["Version"]
+                    assert event["Variant"] == event_properties["Variant"]
+                    assert event["VariantAssignmentReason"] == event_properties["VariantAssignmentReason"]
+
+                    if "VariantAssignmentPercentage" in event: # User/Group assignment doesn't have this property
+                        assert event["VariantAssignmentPercentage"] == event_properties["VariantAssignmentPercentage"]
+                    
+                    assert event["DefaultWhenEnabled"] == event_properties["DefaultWhenEnabled"]
+                    assert event["ETag"] # ETag will be different for each store, just assert it exists
+                    assert event["FeatureFlagReference"] ==  endpoint + event_properties["FeatureFlagReference"]
+                    assert event["FeatureFlagId"].decode("utf-8") == event_properties["FeatureFlagId"]
+                    assert event["AllocationId"] == event_properties["AllocationId"]
+                    assert event["TargetingId"] == event_properties["TargetingId"]
 
 
 def endpoint_from_connection_string(connection_string):
