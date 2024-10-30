@@ -28,7 +28,7 @@
     {
         "FeatureFlagName": "TestVariants",
         "Inputs": {
-            "user": "Adam"
+            "User": "Adam"
         },
         "IsEnabled": {
             "Result": "true"
@@ -43,7 +43,7 @@
     {
         "FeatureFlagName": "TestVariants",
         "Inputs": {
-            "user": "Britney"
+            "User": "Britney"
         },
         "IsEnabled": {
             "Result": "true"

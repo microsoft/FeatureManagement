@@ -98,7 +98,7 @@ public class Tests
                 }
                 else
                 {
-                    bool isEnabledResult = await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.user, Groups = featureFlagTest.Inputs.groups });
+                    bool isEnabledResult = await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.User, Groups = featureFlagTest.Inputs.Groups });
                     Assert.AreEqual(expectedIsEnabledResult, isEnabledResult, failedDescription);
                 }
             }
@@ -112,7 +112,7 @@ public class Tests
                 }
                 else
                 {
-                    Variant variantResult = await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.user, Groups = featureFlagTest.Inputs.groups });
+                    Variant variantResult = await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.User, Groups = featureFlagTest.Inputs.Groups });
                     
                     if (featureFlagTest.Variant.Result == null) {
                         Assert.IsNull(variantResult);

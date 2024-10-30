@@ -13,8 +13,8 @@ namespace Dotnet
 
         internal class InputsSection
         {
-            public string user { get; set; }
-            public string[] groups { get; set; }
+            public string User { get; set; }
+            public string[] Groups { get; set; }
         }
 
         internal class IsEnabledSection
