@@ -95,7 +95,7 @@
         "FeatureFlagName": "Complete",
         "Inputs": {
             "User": "Rachel",
-            "group": "beta"
+            "Groups": ["beta"]
         },
         "IsEnabled": {
             "Result": "true"
