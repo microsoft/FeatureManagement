@@ -14,4 +14,4 @@ deactivate
 Set-Location -Path "../Spring/validation-tests"
 mvn test
 
-Set-Location -Path ".."
+Set-Location -Path "../.."
