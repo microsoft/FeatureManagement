@@ -2,17 +2,20 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Aiden"
+            "User": "Aiden"
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
-            "Result": 100
+            "Result": {
+                "Name": "Large",
+                "ConfigurationValue": 100
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -31,17 +34,20 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Rachel"
+            "User": "Rachel"
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
-            "Result": 10
+            "Result": {
+                "Name": "Small",
+                "ConfigurationValue": 10
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -59,18 +65,21 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Aiden",
-            "groups": ["beta"]
+            "User": "Aiden",
+            "Groups": ["beta"]
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
-            "Result": 100
+            "Result": {
+                "Name": "Large",
+                "ConfigurationValue": 100
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -88,18 +97,21 @@
     {
         "FeatureFlagName": "Complete",
         "Inputs": {
-            "user": "Rachel",
-            "group": "beta"
+            "User": "Rachel",
+            "Groups": ["beta"]
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
-            "Result": 10
+            "Result": {
+                "Name": "Small",
+                "ConfigurationValue": 10
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",

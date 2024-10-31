@@ -2,30 +2,33 @@
     {
         "FeatureFlagName": "TelemetryVariantPercentile",
         "Inputs": {
-            "user": "Sami"
+            "User": "Sami"
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
             "Result": {
-                "someOtherKey": {
-                    "someSubKey": "someSubValue"
-                },
-                "someKey4": [
-                    3,
-                    1,
-                    4,
-                    true
-                ],
-                "someKey": "someValue",
-                "someKey3": 3.14,
-                "someKey2": 3
+                "Name": "True_Override",
+                "ConfigurationValue": {
+                    "someOtherKey": {
+                        "someSubKey": "someSubValue"
+                    },
+                    "someKey4": [
+                        3,
+                        1,
+                        4,
+                        true
+                    ],
+                    "someKey": "someValue",
+                    "someKey3": 3.14,
+                    "someKey2": 3
+                }
             }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "TelemetryVariantPercentile",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -44,17 +47,20 @@
     {
         "FeatureFlagName": "Background.Colors",
         "Inputs": {
-            "user": "Aiden"
+            "User": "Aiden"
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
-            "Result": {"r": 75, "g": 0, "b": 130}
+            "Result": {
+                "Name": "Indigo",
+                "ConfigurationValue": { "r": 75, "g": 0, "b": 130 }
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Background.Colors",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -73,17 +79,22 @@
     {
         "FeatureFlagName": "Background.Colors",
         "Inputs": {
-            "user": "Brittney"
+            "User": "Brittney"
         },
         "IsEnabled": {
             "Result": "true"
         },
         "Variant": {
-            "Result": {"r": 255, "g": 162, "b": 0}
+            "Result": {
+                "Name": "Orange",
+                "ConfigurationValue": {
+                    "r": 255, "g": 162, "b": 0
+                }
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Background.Colors",
                 "Enabled": "True",
                 "Version": "1.0.0",

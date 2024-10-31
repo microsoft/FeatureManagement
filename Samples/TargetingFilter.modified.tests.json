@@ -2,7 +2,7 @@
     {
         "FriendlyName": "Aiden62",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden"},
+        "Inputs": {"User":"Aiden"},
         "IsEnabled": {
             "Result": "true"
         },
@@ -14,7 +14,7 @@
     {
         "FriendlyName": "Aiden62 - Stage1",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden", "groups":["Stage1"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage1"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -26,7 +26,7 @@
     {
         "FriendlyName": "Aiden62 - Stage2",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden", "groups":["Stage2"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -38,7 +38,7 @@
     {
         "FriendlyName": "Aiden62 - Stage3",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden", "groups":["Stage3"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -50,7 +50,7 @@
     {
         "FriendlyName": "Brittney62",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney"},
+        "Inputs": {"User":"Brittney"},
         "IsEnabled": {
             "Result": "true"
         },
@@ -62,7 +62,7 @@
     {
         "FriendlyName": "Brittney62 - Stage1",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney", "groups":["Stage1"]},
+        "Inputs": {"User":"Brittney", "Groups":["Stage1"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -74,7 +74,7 @@
     {
         "FriendlyName": "Brittney62 - Stage2",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney", "groups":["Stage2"]},
+        "Inputs": {"User":"Brittney", "Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -86,7 +86,7 @@
     {
         "FriendlyName": "Brittney62 - Stage3",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney", "groups":["Stage3"]},
+        "Inputs": {"User":"Brittney", "Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "true"
         },
