@@ -9,7 +9,7 @@ public class ValidationTestCase {
     private String featureFlagName;
     private LinkedHashMap<String, Object> inputs;
     private IsEnabled isEnabled;
-    private Variant variant;
+    private VariantResult variant;
     private String description;
 
     /**
@@ -71,14 +71,14 @@ public class ValidationTestCase {
     /**
      * @return variant
      * */
-    public Variant getVariant() {
+    public VariantResult getVariant() {
         return variant;
     }
 
     /**
      * @param variant the variant of test case
      * */
-    public void setVariant(Variant variant) {
+    public void setVariant(VariantResult variant) {
         this.variant = variant;
     }
 

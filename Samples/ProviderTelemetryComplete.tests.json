@@ -8,11 +8,13 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": 100
+            "Result": {
+                "ConfigurationValue": 100
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -37,11 +39,13 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": 10
+            "Result": {
+                "ConfigurationValue": 10
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -66,11 +70,13 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": 100
+            "Result": {
+                "ConfigurationValue": 100
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",
@@ -95,11 +101,13 @@
             "Result": "true"
         },
         "Variant": {
-            "Result": 10
+            "Result": {
+                "ConfigurationValue": 10
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "Complete",
                 "Enabled": "True",
                 "Version": "1.0.0",

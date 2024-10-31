@@ -17,6 +17,7 @@ FRIENDLY_NAME_KEY = "FriendlyName"
 IS_ENABLED_KEY = "IsEnabled"
 GET_VARIANT_KEY = "Variant"
 RESULT_KEY = "Result"
+VARIANT_NAME_KEY = "Name"
 CONFIGURATION_VALUE_KEY = "ConfigurationValue"
 FEATURE_FLAG_NAME_KEY = "FeatureFlagName"
 INPUTS_KEY = "Inputs"
@@ -126,4 +127,7 @@ class TestFromFile(unittest.TestCase):
                 if get_variant[RESULT_KEY] == None:
                     assert variant == None
                 else:
+                    if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
+                        assert variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY], failed_description
+                    
                     assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description
