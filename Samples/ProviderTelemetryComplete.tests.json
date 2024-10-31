@@ -9,6 +9,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "Large",
                 "ConfigurationValue": 100
             }
         },
@@ -40,6 +41,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "Small",
                 "ConfigurationValue": 10
             }
         },
@@ -71,6 +73,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "Large",
                 "ConfigurationValue": 100
             }
         },
@@ -102,6 +105,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "Small",
                 "ConfigurationValue": 10
             }
         },
