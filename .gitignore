@@ -407,3 +407,6 @@ env/
 .settings
 mvnw*
 target/
+
+# JavaScript bundler folder
+out/
