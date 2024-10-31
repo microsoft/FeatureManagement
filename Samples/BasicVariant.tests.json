@@ -7,6 +7,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "True_Override",
                 "ConfigurationValue": "default"
             }
         },
@@ -20,6 +21,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "False_Override",
                 "ConfigurationValue": "default"
             }
         },
@@ -35,6 +37,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "Alpha",
                 "ConfigurationValue": "The Variant Alpha."
             }
         },
@@ -50,6 +53,7 @@
         },
         "Variant": {
             "Result": {
+                "Name": "Beta",
                 "ConfigurationValue": "The Variant Beta."
             }
         },
