@@ -1,13 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 //
-using Dotnet;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.FeatureManagement;
 using Microsoft.FeatureManagement.FeatureFilters;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace DotnetFeatureManagementTests;
 
 [TestClass]
 public class Tests
@@ -16,7 +18,12 @@ public class Tests
     private const string SampleJsonKey = ".sample.json";
     private const string TestsJsonKey = ".tests.json";
 
-    private ActivityListener _activityListener;
+    private ActivityListener? _activityListener;
+
+    private readonly JsonSerializerOptions options = new() 
+    {
+        Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+    };
 
     [TestMethod]
     [DataRow("NoFilters")]
@@ -30,7 +37,7 @@ public class Tests
         // Use Sample JSON as Configuration
         string file = Directory.GetFiles(FilePath, fileName + SampleJsonKey).First();
 
-        ConfigurationBuilder builder = new ConfigurationBuilder();
+        ConfigurationBuilder builder = new();
 
         builder.AddJsonFile(Path.GetFullPath(file));
 
@@ -70,7 +77,7 @@ public class Tests
         ServiceProvider serviceProvider = services.BuildServiceProvider();
         IVariantFeatureManager featureManager = serviceProvider.GetRequiredService<IVariantFeatureManager>();
 
-        // Cant 
+        // Can't use DataRow because ActivityListener requires these are run sequentially
         await RunTests(featureManager, "ProviderTelemetry");
         await RunTests(featureManager, "ProviderTelemetryComplete");
     }
@@ -78,10 +85,7 @@ public class Tests
     private async Task RunTests(IVariantFeatureManager featureManager, string fileName)
     {
         // Get Test Suite JSON
-        var featureFlagTests = JsonSerializer.Deserialize<SharedTest[]>(File.ReadAllText(FilePath + fileName + TestsJsonKey), new JsonSerializerOptions
-        {
-            Converters = { new UnknownJsonFieldConverter() }
-        });
+        var featureFlagTests = JsonSerializer.Deserialize<SharedTest[]>(File.ReadAllText(FilePath + fileName + TestsJsonKey), options);
 
         if (featureFlagTests == null) {
             throw new Exception("Test failed to parse JSON");
@@ -110,7 +114,7 @@ public class Tests
                 }
                 else
                 {
-                    bool isEnabledResult = await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.User, Groups = featureFlagTest.Inputs.Groups });
+                    bool isEnabledResult = await featureManager.IsEnabledAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs?.User, Groups = featureFlagTest.Inputs?.Groups });
                     Assert.AreEqual(expectedIsEnabledResult, isEnabledResult, failedDescription);
                 }
             }
@@ -124,7 +128,7 @@ public class Tests
                 }
                 else
                 {
-                    Variant variantResult = await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs.User, Groups = featureFlagTest.Inputs.Groups });
+                    Variant variantResult = await featureManager.GetVariantAsync(featureFlagTest.FeatureFlagName, new TargetingContext { UserId = featureFlagTest.Inputs?.User, Groups = featureFlagTest.Inputs?.Groups });
 
                     if (featureFlagTest.Variant.Result == null)
                     {
@@ -139,7 +143,7 @@ public class Tests
 
             if (featureFlagTest.Telemetry != null)
             {
-                _activityListener.Dispose();
+                _activityListener?.Dispose();
             }
         }
     }
@@ -158,17 +162,20 @@ public class Tests
                 {
                     Dictionary<string, object?> evaluationEventProperties = evaluationEvent.Value.Tags.ToDictionary((tag) => tag.Key, (tag) => tag.Value);
 
-                    foreach (var property in featureFlagTest.Telemetry.EventProperties)
+                    if (featureFlagTest.Telemetry != null && featureFlagTest.Telemetry.EventProperties != null)
                     {
-                        Assert.IsTrue(evaluationEventProperties.ContainsKey(property.Key), failedDescription);
+                        foreach (var property in featureFlagTest.Telemetry.EventProperties)
+                        {
+                            Assert.IsTrue(evaluationEventProperties.ContainsKey(property.Key), failedDescription);
 
-                        if (property.Key == "FeatureFlagReference")
-                        {
-                            Assert.IsTrue(evaluationEventProperties[property.Key]?.ToString()?.EndsWith(property.Value));
-                        }
-                        else
-                        {
-                            Assert.AreEqual(property.Value, evaluationEventProperties[property.Key]?.ToString(), failedDescription);
+                            if (property.Key == "FeatureFlagReference")
+                            {
+                                Assert.IsTrue(evaluationEventProperties[property.Key]?.ToString()?.EndsWith(property.Value));
+                            }
+                            else
+                            {
+                                Assert.AreEqual(property.Value, evaluationEventProperties[property.Key]?.ToString(), failedDescription);
+                            }
                         }
                     }
                 }
@@ -180,24 +187,30 @@ public class Tests
 
     private void ValidateJsonConfigurationValue(JsonElement? ele, IConfigurationSection configuration)
     {
-        if (ele == null) {
+        if (ele == null)
+        {
             Assert.IsNull(configuration.Get<string>());
         }
-        if (ele.Value.ValueKind == JsonValueKind.Object)
+        else
         {
-            foreach (var property in ele.Value.EnumerateObject())
+            if (ele.Value.ValueKind == JsonValueKind.Object)
             {
-                ValidateProperty(property.Value, configuration.GetSection(property.Name));
+                foreach (var property in ele.Value.EnumerateObject())
+                {
+                    ValidateProperty(property.Value, configuration.GetSection(property.Name));
+                }
             }
-        } else if (ele.Value.ValueKind == JsonValueKind.Array)
-        {
-            for (int i = 0; i < ele.Value.GetArrayLength(); i++)
+            else if (ele.Value.ValueKind == JsonValueKind.Array)
             {
-                ValidateProperty(ele.Value[i], configuration.GetSection(i.ToString()));
+                for (int i = 0; i < ele.Value.GetArrayLength(); i++)
+                {
+                    ValidateProperty(ele.Value[i], configuration.GetSection(i.ToString()));
+                }
             }
-        } else
-        {
-            ValidateProperty(ele.Value, configuration);
+            else
+            {
+                ValidateProperty(ele.Value, configuration);
+            }
         }
     }
 
