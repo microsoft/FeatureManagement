@@ -3,6 +3,7 @@
 # Licensed under the MIT License. See License.txt in the project root for
 # license information.
 # --------------------------------------------------------------------------
+
 import logging
 import json
 import unittest
@@ -21,10 +22,12 @@ GET_TELEMETRY_KEY = "Telemetry"
 EVENT_NAME_KEY = "event_name"
 EVENT_PROPERTIES_KEY = "event_properties"
 RESULT_KEY = "Result"
+VARIANT_NAME_KEY = "Name"
+CONFIGURATION_VALUE_KEY = "ConfigurationValue"
 FEATURE_FLAG_NAME_KEY = "FeatureFlagName"
 INPUTS_KEY = "Inputs"
-USER_KEY = "user"
-GROUPS_KEY = "groups"
+USER_KEY = "User"
+GROUPS_KEY = "Groups"
 EXCEPTION_KEY = "Exception"
 DESCRIPTION_KEY = "Description"
 
@@ -44,7 +47,7 @@ def convert_boolean_value(enabled):
     return enabled
 
 
-class TestNoFiltersFromFile(unittest.TestCase):
+class TestFromFile(unittest.TestCase):
     # method: is_enabled
     def test_no_filters(self):
         test_key = "NoFilters"
@@ -74,6 +77,7 @@ class TestNoFiltersFromFile(unittest.TestCase):
     def test_basic_variant(self):
         test_key = "BasicVariant"
         self.run_tests(test_key)
+
 
     # method: is_enabled
     def test_variant_assignment(self):
@@ -154,16 +158,18 @@ class TestNoFiltersFromFile(unittest.TestCase):
                 expected_message = is_enabled.get(EXCEPTION_KEY)
                 assert str(ex_info.value) == expected_message, failed_description
 
-            if get_variant is not None and get_variant[RESULT_KEY]:
+            if get_variant is not None and RESULT_KEY in get_variant:
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
-                variant = feature_manager.get_variant(
-                    feature_flag_test[FEATURE_FLAG_NAME_KEY],
-                    TargetingContext(user_id=user, groups=groups),
-                )
-                if not variant:
-                    logger.error(f"Variant is None for {feature_flag_id}")
-                    assert False, failed_description
-                assert (
-                    variant.configuration == get_variant[RESULT_KEY]
-                ), failed_description
+
+                variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
+  
+                assert variant, failed_description
+
+                if not get_variant[RESULT_KEY]:
+                    assert not variant
+                    continue
+                if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
+                    assert variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY], failed_description
+                    
+                assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description

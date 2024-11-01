@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Dotnet": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "APP_CONFIG_VALIDATION_CONNECTION_STRING": "Endpoint=https://appconfig4ndakx7twshlm.azconfig.io;Id=A3jj;Secret=1WWpbi6jB5Bw9sYAvrHfSteqInR0UCZhwA2ynipVN1LcutGRncMyJQQJ99AJACYeBjFAArohAAACAZACIycQ"
+      }
+    }
+  }
+}

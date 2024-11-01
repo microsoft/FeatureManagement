@@ -399,6 +399,7 @@ FodyWeavers.xsd
 
 # Python env
 env/
+venv/
 
 .classpath
 

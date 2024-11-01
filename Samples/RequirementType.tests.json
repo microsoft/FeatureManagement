@@ -45,7 +45,7 @@
     },
     {
         "FeatureFlagName": "RequirementTypeAllPassed",
-        "Inputs": {"user":"Adam"},
+        "Inputs": {"User":"Adam"},
         "IsEnabled": {
             "Result": "true"
         },
@@ -56,7 +56,7 @@
     },
     {
         "FeatureFlagName": "RequirementTypeAllLastFilterFailed",
-        "Inputs": {"user":"Adam"},
+        "Inputs": {"User":"Adam"},
         "IsEnabled": {
             "Result": "false"
         },

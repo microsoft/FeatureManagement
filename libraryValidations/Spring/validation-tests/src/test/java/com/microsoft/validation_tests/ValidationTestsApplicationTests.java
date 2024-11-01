@@ -31,9 +31,9 @@ class ValidationTestsApplicationTests {
 
     static final String TEST_FILE_POSTFIX = ".tests.json";
 
-    private final String inputsUser = "user";
+    private final String inputsUser = "User";
 
-    private final String inputsGroups = "groups";
+    private final String inputsGroups = "Groups";
 
     @Autowired
     private FeatureManager featureManager;

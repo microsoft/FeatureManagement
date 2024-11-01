@@ -1,2 +1,3 @@
 pytest
-featuremanagement["AzureMonitor"]
+featuremanagement["AzureMonitor"]==2.0.0b2
+azure-appconfiguration-provider==2.0.0b2
