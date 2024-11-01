@@ -409,5 +409,7 @@ venv/
 mvnw*
 target/
 
+package-lock.json
+
 # JavaScript bundler folder
 out/
