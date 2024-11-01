@@ -19,10 +19,12 @@ FRIENDLY_NAME_KEY = "FriendlyName"
 IS_ENABLED_KEY = "IsEnabled"
 GET_VARIANT_KEY = "Variant"
 RESULT_KEY = "Result"
+VARIANT_NAME_KEY = "Name"
+CONFIGURATION_VALUE_KEY = "ConfigurationValue"
 FEATURE_FLAG_NAME_KEY = "FeatureFlagName"
 INPUTS_KEY = "Inputs"
-USER_KEY = "user"
-GROUPS_KEY = "groups"
+USER_KEY = "User"
+GROUPS_KEY = "Groups"
 EXCEPTION_KEY = "Exception"
 DESCRIPTION_KEY = "Description"
 
@@ -97,15 +99,17 @@ class TestFromProvider(unittest.TestCase):
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
                 variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
                 assert variant, failed_description
-                assert variant.configuration == get_variant[RESULT_KEY], failed_description
+                if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
+                    assert variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY], failed_description
+                assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description
 
                 if telemetry:
                     assert track_event_mock.called
                     assert track_event_mock.call_count == 2
-                    assert track_event_mock.call_args[0][0] == telemetry["event_name"]
+                    assert track_event_mock.call_args[0][0] == telemetry["EventName"]
 
                     event = track_event_mock.call_args[0][1]
-                    event_properties = telemetry["event_properties"]
+                    event_properties = telemetry["EventProperties"]
                     connection_string = os.getenv("APP_CONFIG_VALIDATION_CONNECTION_STRING")
                     endpoint = endpoint_from_connection_string(connection_string)
 
