@@ -1,0 +1,129 @@
+[
+    {
+        "FeatureFlagName": "Complete",
+        "Inputs": {
+            "User": "Aiden"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {
+                "Name": "Large",
+                "ConfigurationValue": 100
+            }
+        },
+        "Telemetry": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
+                "FeatureName": "Complete",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "Large",
+                "VariantAssignmentReason": "Percentile",
+                "VariantAssignmentPercentage": "30",
+                "DefaultWhenEnabled": "Medium",
+                "AllocationId": "DER2rF-ZYog95c4CBZoi",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Complete",
+                "FeatureFlagId": "3U5fo_c59GC_8JXZCyKB6O0CiDyuh3KfIqJ0-kAl7Gk",
+                "TargetingId": "Aiden"
+            }
+        },
+        "Description": "A basic feature flag with telemetry."
+    },
+    {
+        "FeatureFlagName": "Complete",
+        "Inputs": {
+            "User": "Rachel"
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {
+                "Name": "Small",
+                "ConfigurationValue": 10
+            }
+        },
+        "Telemetry": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
+                "FeatureName": "Complete",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "Small",
+                "VariantAssignmentReason": "User",
+                "DefaultWhenEnabled": "Medium",
+                "AllocationId": "DER2rF-ZYog95c4CBZoi",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Complete",
+                "FeatureFlagId": "3U5fo_c59GC_8JXZCyKB6O0CiDyuh3KfIqJ0-kAl7Gk",
+                "TargetingId": "Rachel"
+            }
+        },
+        "Description": "A feature flag where a user is targeted to a specific variant."
+    },
+    {
+        "FeatureFlagName": "Complete",
+        "Inputs": {
+            "User": "Aiden",
+            "Groups": ["beta"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {
+                "Name": "Large",
+                "ConfigurationValue": 100
+            }
+        },
+        "Telemetry": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
+                "FeatureName": "Complete",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "Large",
+                "VariantAssignmentReason": "Group",
+                "DefaultWhenEnabled": "Medium",
+                "AllocationId": "DER2rF-ZYog95c4CBZoi",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Complete",
+                "FeatureFlagId": "3U5fo_c59GC_8JXZCyKB6O0CiDyuh3KfIqJ0-kAl7Gk",
+                "TargetingId": "Aiden"
+            }
+        },
+        "Description": "A feature flag where a user is targeted to a specific variant, but also is part of an assigned group."
+    },
+    {
+        "FeatureFlagName": "Complete",
+        "Inputs": {
+            "User": "Rachel",
+            "Groups": ["beta"]
+        },
+        "IsEnabled": {
+            "Result": "true"
+        },
+        "Variant": {
+            "Result": {
+                "Name": "Small",
+                "ConfigurationValue": 10
+            }
+        },
+        "Telemetry": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
+                "FeatureName": "Complete",
+                "Enabled": "True",
+                "Version": "1.0.0",
+                "Variant": "Small",
+                "VariantAssignmentReason": "User",
+                "DefaultWhenEnabled": "Medium",
+                "AllocationId": "DER2rF-ZYog95c4CBZoi",
+                "FeatureFlagReference": "/kv/.appconfig.featureflag/Complete",
+                "FeatureFlagId": "3U5fo_c59GC_8JXZCyKB6O0CiDyuh3KfIqJ0-kAl7Gk",
+                "TargetingId": "Rachel"
+            }
+        },
+        "Description": "A feature flag where a user is targeted to a specific variant, but also is part of an assigned group."
+    }
+]

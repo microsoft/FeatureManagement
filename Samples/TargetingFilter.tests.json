@@ -2,7 +2,7 @@
     {
         "FriendlyName": "DisabledDefaultRollout",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Aiden"},
+        "Inputs": {"User":"Aiden"},
         "IsEnabled": {
             "Result": "false"
         },
@@ -14,7 +14,7 @@
     {
         "FriendlyName": "EnabledDefaultRollout",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Blossom"},
+        "Inputs": {"User":"Blossom"},
         "IsEnabled": {
             "Result": "true"
         },
@@ -26,7 +26,7 @@
     {
         "FriendlyName": "TargetedUser",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Alice"},
+        "Inputs": {"User":"Alice"},
         "IsEnabled": {
             "Result": "true"
         },
@@ -38,7 +38,7 @@
     {
         "FriendlyName": "TargetedGroup",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Aiden", "groups":["Stage1"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage1"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -50,7 +50,7 @@
     {
         "FriendlyName": "DisabledTargetedGroup",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"groups":["Stage2"]},
+        "Inputs": {"Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -62,7 +62,7 @@
     {
         "FriendlyName": "EnabledTargetedGroup50",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Aiden", "groups":["Stage2"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -74,7 +74,7 @@
     {
         "FriendlyName": "DisabledTargetedGroup50",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Chris", "groups":["Stage2"]},
+        "Inputs": {"User":"Chris", "Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -86,7 +86,7 @@
     {
         "FriendlyName": "ExcludedGroup",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"groups":["Stage3"]},
+        "Inputs": {"Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -98,7 +98,7 @@
     {
         "FriendlyName": "ExcludedGroupTargetedUser",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Alice", "groups":["Stage3"]},
+        "Inputs": {"User":"Alice", "Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -110,7 +110,7 @@
     {
         "FriendlyName": "ExcludedGroupDefaultRollout",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Blossom", "groups":["Stage3"]},
+        "Inputs": {"User":"Blossom", "Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -122,7 +122,7 @@
     {
         "FriendlyName": "ExcludedUser",
         "FeatureFlagName": "ComplexTargeting",
-        "Inputs": {"user":"Dave", "groups":["Stage1"]},
+        "Inputs": {"User":"Dave", "Groups":["Stage1"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -134,7 +134,7 @@
     {
         "FriendlyName": "Aiden61",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden"},
+        "Inputs": {"User":"Aiden"},
         "IsEnabled": {
             "Result": "true"
         },
@@ -146,7 +146,7 @@
     {
         "FriendlyName": "Aiden61 - Stage1",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden", "groups":["Stage1"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage1"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -158,7 +158,7 @@
     {
         "FriendlyName": "Aiden61 - Stage2",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden", "groups":["Stage2"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -170,7 +170,7 @@
     {
         "FriendlyName": "Aiden61 - Stage3",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Aiden", "groups":["Stage3"]},
+        "Inputs": {"User":"Aiden", "Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "true"
         },
@@ -182,7 +182,7 @@
     {
         "FriendlyName": "Brittney61",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney"},
+        "Inputs": {"User":"Brittney"},
         "IsEnabled": {
             "Result": "false"
         },
@@ -194,7 +194,7 @@
     {
         "FriendlyName": "Brittney61 - Stage1",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney", "groups":["Stage1"]},
+        "Inputs": {"User":"Brittney", "Groups":["Stage1"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -206,7 +206,7 @@
     {
         "FriendlyName": "Brittney61 - Stage2",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney", "groups":["Stage2"]},
+        "Inputs": {"User":"Brittney", "Groups":["Stage2"]},
         "IsEnabled": {
             "Result": "false"
         },
@@ -218,7 +218,7 @@
     {
         "FriendlyName": "Brittney61 - Stage3",
         "FeatureFlagName": "RolloutPercentageUpdate",
-        "Inputs": {"user":"Brittney", "groups":["Stage3"]},
+        "Inputs": {"User":"Brittney", "Groups":["Stage3"]},
         "IsEnabled": {
             "Result": "false"
         },

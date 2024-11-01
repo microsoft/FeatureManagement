@@ -3,34 +3,34 @@
 package com.microsoft.validation_tests.models;
 
 public class Variant {
-    private String result;
-    private String exception;
+    private String name;
+    private Object configurationValue;
 
     /**
-     * @return result
+     * @return name
      * */
-    public String getResult() {
-        return result;
+    public String getName() {
+        return name;
     }
 
     /**
-     * @param result the result of variant feature flag
+     * @param name the name of variant feature flag
      * */
-    public void setResult(String result) {
-        this.result = result;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * @return exception
+     * @return configurationValue
      * */
-    public String getException() {
-        return exception;
+    public Object getConfigurationValue() {
+        return configurationValue;
     }
 
     /**
-     * @param exception the exception message throws when run variant test case
+     * @param configurationValue the configurationValue of the variant
      * */
-    public void setException(String exception) {
-        this.exception = exception;
+    public void setConfigurationValue(Object exception) {
+        this.configurationValue = exception;
     }
 }
