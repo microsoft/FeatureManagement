@@ -413,3 +413,4 @@ package-lock.json
 
 # JavaScript bundler folder
 out/
+*.tgz
