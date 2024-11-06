@@ -1,0 +1,1 @@
+console.log(process.env["APP_CONFIG_VALIDATION_CONNECTION_STRING1"]);

@@ -15,6 +15,7 @@
         "rimraf": "^5.0.5",
         "tslib": "^2.6.2",
         "typescript": "^5.3.3",
-        "@microsoft/feature-management": "latest"
+        "@microsoft/feature-management": "file:./microsoft-feature-management-2.0.0-preview.2.tgz",
+        "@azure/app-configuration-provider": "file:./azure-app-configuration-provider-1.1.2.tgz"
     }
 }
