@@ -132,117 +132,118 @@ async function runTest(testName: string) {
 
 async function runTestWithProvider(testName: string) {
     const connectionString = process.env["APP_CONFIG_VALIDATION_CONNECTION_STRING"];
-    if (connectionString !== undefined) {
-        const config = await load(
-            connectionString, 
-            { 
-                featureFlagOptions: { 
-                    enabled: true,
-                    selectors: [
-                        {
-                            keyFilter: "*"
-                        }
-                    ]
-                }
-            });
-        const testcases: FeatureFlagTest[] = JSON.parse(await fs.readFile(FILE_PATH + testName + TESTS_JSON_KEY, "utf8"));
-        const ffProvider = new ConfigurationMapFeatureFlagProvider(config);
-
-        const fm = new FeatureManager(ffProvider, { onFeatureEvaluated: createTelemetryPublisher(appInsights) });
-        for (const testcase of testcases){
-            const featureFlagName = testcase.FeatureFlagName;
-            const context = { userId: testcase.Inputs?.User, groups: testcase.Inputs?.Groups };
-    
-            if (testcase.IsEnabled) {
-                if (testcase.IsEnabled.Exception !== undefined) {
-                    try {
-                        await fm.isEnabled(featureFlagName, context);
-                        expect.fail("It should throw exception.");
-                    } 
-                    catch (error) {
-                        // TODO: Verify the error message after we unify it across libraries
-                        // expect(error.message).to.include(testcase.IsEnabled.Exception);
+    if (connectionString === undefined) {
+        console.log("Skipping test as environment variable APP_CONFIG_VALIDATION_CONNECTION_STRING is not set.");
+        return;
+    }
+    const config = await load(
+        connectionString, 
+        { 
+            featureFlagOptions: { 
+                enabled: true,
+                selectors: [
+                    {
+                        keyFilter: "*"
                     }
+                ]
+            }
+        });
+    const testcases: FeatureFlagTest[] = JSON.parse(await fs.readFile(FILE_PATH + testName + TESTS_JSON_KEY, "utf8"));
+    const ffProvider = new ConfigurationMapFeatureFlagProvider(config);
+
+    const fm = new FeatureManager(ffProvider, { onFeatureEvaluated: createTelemetryPublisher(appInsights) });
+    for (const testcase of testcases){
+        const featureFlagName = testcase.FeatureFlagName;
+        const context = { userId: testcase.Inputs?.User, groups: testcase.Inputs?.Groups };
+
+        if (testcase.IsEnabled) {
+            if (testcase.IsEnabled.Exception !== undefined) {
+                try {
+                    await fm.isEnabled(featureFlagName, context);
+                    expect.fail("It should throw exception.");
+                } 
+                catch (error) {
+                    // TODO: Verify the error message after we unify it across libraries
+                    // expect(error.message).to.include(testcase.IsEnabled.Exception);
+                }
+            } 
+            else {
+                expect(await fm.isEnabled(featureFlagName, context)).to.eq(testcase.IsEnabled.Result === "true");
+            }
+        }
+
+        if (testcase.Variant){
+            if (testcase.Variant.Exception !== undefined) {
+                try {
+                    await fm.getVariant(featureFlagName, context);
+                    expect.fail("It should throw exception.");
+                } 
+                catch (error) {
+                    // TODO: Verify the error message after we unify it across libraries
+                    // expect(error.message).to.include(testcase.IsEnabled.Exception);
+                }
+            } 
+            else {
+                const variant = await fm.getVariant(featureFlagName, context);
+                if (testcase.Variant.Result === null) {
+                    expect(variant).to.be.undefined;
                 } 
                 else {
-                    expect(await fm.isEnabled(featureFlagName, context)).to.eq(testcase.IsEnabled.Result === "true");
+                    if (testcase.Variant.Result?.Name) {
+                        expect(variant?.name).to.eq(testcase.Variant.Result.Name);
+                    }
+                    if (testcase.Variant.Result?.ConfigurationValue) {      
+                        expect(variant?.configuration).to.deep.eq(testcase.Variant.Result.ConfigurationValue);
+                    }
                 }
             }
-    
-            if (testcase.Variant){
-                if (testcase.Variant.Exception !== undefined) {
-                    try {
-                        await fm.getVariant(featureFlagName, context);
-                        expect.fail("It should throw exception.");
-                    } 
-                    catch (error) {
-                        // TODO: Verify the error message after we unify it across libraries
-                        // expect(error.message).to.include(testcase.IsEnabled.Exception);
-                    }
-                } 
+        }
+
+        if (testcase.Telemetry?.EventName) {
+            expect(eventToValidate.name).to.eq(testcase.Telemetry.EventName);
+        }
+
+        const eventProperties = testcase.Telemetry?.EventProperties;
+        if (eventProperties) {
+            if (eventProperties.FeatureName) {
+                expect(eventPropertiesToValidate["FeatureName"]).to.eq(eventProperties.FeatureName);
+            }
+            if (eventProperties.Enabled) {
+                expect(eventPropertiesToValidate["Enabled"]).to.eq(eventProperties.Enabled);
+            }
+            if (eventProperties.Version) {
+                expect(eventPropertiesToValidate["Version"]).to.eq(eventProperties.Version);
+            }
+            if (eventProperties.Variant) {
+                expect(eventPropertiesToValidate["Variant"]).to.eq(eventProperties.Variant);
+            }
+            if (eventProperties.VariantAssignmentReason) {
+                expect(eventPropertiesToValidate["VariantAssignmentReason"]).to.eq(eventProperties.VariantAssignmentReason);
+            }
+            if (eventProperties.VariantAssignmentPercentage) {
+                expect(eventPropertiesToValidate["VariantAssignmentPercentage"]).to.eq(eventProperties.VariantAssignmentPercentage);
+            }
+            if (eventProperties.DefaultWhenEnabled) {
+                expect(eventPropertiesToValidate["DefaultWhenEnabled"]).to.eq(eventProperties.DefaultWhenEnabled);
+            }
+            if (eventProperties.AllocationId) {
+                expect(eventPropertiesToValidate["AllocationId"]).to.eq(eventProperties.AllocationId);
+            }
+            if (eventProperties.FeatureFlagId) {
+                expect(eventPropertiesToValidate["FeatureFlagId"]).to.eq(eventProperties.FeatureFlagId);
+            }
+            if (eventProperties.FeatureFlagReference) {
+                const endpointMatch = connectionString.match(/Endpoint=([^;]+)/);
+                if (endpointMatch) {
+                    expect(eventPropertiesToValidate["FeatureFlagReference"]).to.eq(endpointMatch[1] + eventProperties.FeatureFlagReference);
+                }
                 else {
-                    const variant = await fm.getVariant(featureFlagName, context);
-                    if (testcase.Variant.Result === null) {
-                        expect(variant).to.be.undefined;
-                    } 
-                    else {
-                        if (testcase.Variant.Result?.Name) {
-                            expect(variant?.name).to.eq(testcase.Variant.Result.Name);
-                        }
-                        if (testcase.Variant.Result?.ConfigurationValue) {      
-                            expect(variant?.configuration).to.deep.eq(testcase.Variant.Result.ConfigurationValue);
-                        }
-                    }
+                    expect.fail("Connection string does not contain endpoint.");
                 }
             }
-
-            if (testcase.Telemetry?.EventName) {
-                expect(eventToValidate.name).to.eq(testcase.Telemetry.EventName);
+            if (eventProperties.TargetingId) {
+                expect(eventPropertiesToValidate["TargetingId"]).to.eq(eventProperties.TargetingId);
             }
-
-            const eventProperties = testcase.Telemetry?.EventProperties;
-            if (eventProperties) {
-                if (eventProperties.FeatureName) {
-                    expect(eventPropertiesToValidate["FeatureName"]).to.eq(eventProperties.FeatureName);
-                }
-                if (eventProperties.Enabled) {
-                    expect(eventPropertiesToValidate["Enabled"]).to.eq(eventProperties.Enabled);
-                }
-                if (eventProperties.Version) {
-                    expect(eventPropertiesToValidate["Version"]).to.eq(eventProperties.Version);
-                }
-                if (eventProperties.Variant) {
-                    expect(eventPropertiesToValidate["Variant"]).to.eq(eventProperties.Variant);
-                }
-                if (eventProperties.VariantAssignmentReason) {
-                    expect(eventPropertiesToValidate["VariantAssignmentReason"]).to.eq(eventProperties.VariantAssignmentReason);
-                }
-                if (eventProperties.VariantAssignmentPercentage) {
-                    expect(eventPropertiesToValidate["VariantAssignmentPercentage"]).to.eq(eventProperties.VariantAssignmentPercentage);
-                }
-                if (eventProperties.DefaultWhenEnabled) {
-                    expect(eventPropertiesToValidate["DefaultWhenEnabled"]).to.eq(eventProperties.DefaultWhenEnabled);
-                }
-                if (eventProperties.AllocationId) {
-                    expect(eventPropertiesToValidate["AllocationId"]).to.eq(eventProperties.AllocationId);
-                }
-                if (eventProperties.FeatureFlagId) {
-                    expect(eventPropertiesToValidate["FeatureFlagId"]).to.eq(eventProperties.FeatureFlagId);
-                }
-                if (eventProperties.FeatureFlagReference) {
-                    const endpointMatch = connectionString.match(/Endpoint=([^;]+)/);
-                    if (endpointMatch) {
-                        expect(eventPropertiesToValidate["FeatureFlagReference"]).to.eq(endpointMatch[1] + eventProperties.FeatureFlagReference);
-                    }
-                    else {
-                        expect.fail("Connection string does not contain endpoint.");
-                    }
-                }
-                if (eventProperties.TargetingId) {
-                    expect(eventPropertiesToValidate["TargetingId"]).to.eq(eventProperties.TargetingId);
-                }
-            }
-
         }
     }
 }
