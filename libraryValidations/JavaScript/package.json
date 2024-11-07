@@ -6,15 +6,20 @@
         "test": "mocha out/*.test.{js,cjs,mjs} --parallel"
     },
     "dependencies": {
+        "@types/chai-as-promised": "^8.0.1",
         "@types/mocha": "^10.0.6",
         "@types/node": "^20.10.7",
-        "@types/chai-as-promised": "^8.0.1",
+        "@types/sinon": "^17.0.1",
         "chai": "^5.1.2",
         "chai-as-promised": "^8.0.0",
         "mocha": "^10.2.0",
         "rimraf": "^5.0.5",
+        "sinon": "^15.2.0",
         "tslib": "^2.6.2",
         "typescript": "^5.3.3",
-        "@microsoft/feature-management": "latest"
+        "@microsoft/feature-management": "latest",
+        "@microsoft/feature-management-applicationinsights-browser": "latest",
+        "@azure/app-configuration-provider": "latest",
+        "@microsoft/applicationinsights-web": "^3.3.4"
     }
 }
