@@ -163,13 +163,11 @@ class TestFromFile(unittest.TestCase):
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
 
                 variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
-  
-                assert variant, failed_description
 
-                if not get_variant[RESULT_KEY]:
-                    assert not variant
-                    continue
-                if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
-                    assert variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY], failed_description
+                if get_variant[RESULT_KEY] == None:
+                    assert variant == None
+                else:
+                    if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
+                        assert variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY], failed_description
                     
-                assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description
+                    assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description
