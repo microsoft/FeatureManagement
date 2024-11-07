@@ -4,7 +4,6 @@
 # license information.
 # --------------------------------------------------------------------------
 
-import logging
 import json
 import unittest
 from pytest import raises
@@ -19,8 +18,8 @@ FRIENDLY_NAME_KEY = "FriendlyName"
 IS_ENABLED_KEY = "IsEnabled"
 GET_VARIANT_KEY = "Variant"
 GET_TELEMETRY_KEY = "Telemetry"
-EVENT_NAME_KEY = "event_name"
-EVENT_PROPERTIES_KEY = "event_properties"
+EVENT_NAME_KEY = "EventName"
+EVENT_PROPERTIES_KEY = "EventProperties"
 RESULT_KEY = "Result"
 VARIANT_NAME_KEY = "Name"
 CONFIGURATION_VALUE_KEY = "ConfigurationValue"
@@ -30,9 +29,6 @@ USER_KEY = "User"
 GROUPS_KEY = "Groups"
 EXCEPTION_KEY = "Exception"
 DESCRIPTION_KEY = "Description"
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 
 def convert_boolean_value(enabled):
@@ -48,43 +44,35 @@ def convert_boolean_value(enabled):
 
 
 class TestFromFile(unittest.TestCase):
-    # method: is_enabled
+
     def test_no_filters(self):
         test_key = "NoFilters"
         self.run_tests(test_key)
 
-    # method: is_enabled
     def test_time_window_filter(self):
         test_key = "TimeWindowFilter"
         self.run_tests(test_key)
 
-    # method: is_enabled
     def test_targeting_filter(self):
         test_key = "TargetingFilter"
         self.run_tests(test_key)
 
-    # method: is_enabled
     def test_targeting_filter_modified(self):
         test_key = "TargetingFilter.modified"
         self.run_tests(test_key)
 
-    # method: is_enabled
     def test_requirement_type(self):
         test_key = "RequirementType"
         self.run_tests(test_key)
 
-    # method: is_enabled
     def test_basic_variant(self):
         test_key = "BasicVariant"
         self.run_tests(test_key)
 
-
-    # method: is_enabled
     def test_variant_assignment(self):
         test_key = "VariantAssignment"
         self.run_tests(test_key)
 
-    # method: is_enabled
     @patch("featuremanagement.azuremonitor._send_telemetry.azure_monitor_track_event")
     def test_basic_telemetry(self, track_event_mock):
         test_key = "BasicTelemetry"
@@ -98,12 +86,9 @@ class TestFromFile(unittest.TestCase):
         with open(FILE_PATH + file, "r", encoding="utf-8") as feature_flags_file:
             feature_flags = json.load(feature_flags_file)
 
-        if telemetry_callback:
-            feature_manager = FeatureManager(
-                feature_flags, on_feature_evaluated=telemetry_callback
-            )
-        else:
-            feature_manager = FeatureManager(feature_flags)
+        feature_manager = FeatureManager(
+            feature_flags, on_feature_evaluated=telemetry_callback
+        )
         assert feature_manager is not None
 
         return feature_manager
@@ -154,20 +139,42 @@ class TestFromFile(unittest.TestCase):
                 ), failed_description
             else:
                 with raises(ValueError) as ex_info:
-                    feature_manager.is_enabled(feature_flag_test[FEATURE_FLAG_NAME_KEY])
+                    feature_manager.is_enabled(
+                        feature_flag_test[FEATURE_FLAG_NAME_KEY],
+                        TargetingContext(user_id=user, groups=groups),
+                    )
                 expected_message = is_enabled.get(EXCEPTION_KEY)
                 assert str(ex_info.value) == expected_message, failed_description
 
-            if get_variant is not None and RESULT_KEY in get_variant:
+            if get_variant and (
+                RESULT_KEY in get_variant or EXCEPTION_KEY in get_variant
+            ):
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
 
-                variant = feature_manager.get_variant(feature_flag_test[FEATURE_FLAG_NAME_KEY], TargetingContext(user_id=user, groups=groups))
+                if RESULT_KEY not in get_variant:
+                    with raises(ValueError) as ex_info:
+                        feature_manager.get_variant(
+                            feature_flag_test[FEATURE_FLAG_NAME_KEY],
+                            TargetingContext(user_id=user, groups=groups),
+                        )
+                    expected_message = get_variant.get(EXCEPTION_KEY)
+                    assert str(ex_info.value) == expected_message, failed_description
+                    continue
 
-                if get_variant[RESULT_KEY] == None:
-                    assert variant == None
-                else:
-                    if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
-                        assert variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY], failed_description
-                    
-                    assert variant.configuration == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY], failed_description
+                variant = feature_manager.get_variant(
+                    feature_flag_test[FEATURE_FLAG_NAME_KEY],
+                    TargetingContext(user_id=user, groups=groups),
+                )
+                if not get_variant[RESULT_KEY]:
+                    assert not variant
+                    continue
+                if VARIANT_NAME_KEY in get_variant[RESULT_KEY]:
+                    assert (
+                        variant.name == get_variant[RESULT_KEY][VARIANT_NAME_KEY]
+                    ), failed_description
+
+                assert (
+                    variant.configuration
+                    == get_variant[RESULT_KEY][CONFIGURATION_VALUE_KEY]
+                ), failed_description

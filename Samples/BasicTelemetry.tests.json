@@ -1,16 +1,19 @@
 [
     {
         "FeatureFlagName": "TelemetryVariant",
-        "Inputs": {"user":"Aiden"},
+        "Inputs": {"User":"Aiden"},
         "IsEnabled": {
             "Result": "false"
         },
         "Variant": {
-            "Result": "default"
+            "Result": {
+                "Name": "True_Override",
+                "ConfigurationValue": "default"
+            }
         },
         "Telemetry": {
-            "event_name": "FeatureEvaluation",
-            "event_properties": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
                 "FeatureName": "TelemetryVariant",
                 "Enabled": "False",
                 "Version": "1.0.0",
