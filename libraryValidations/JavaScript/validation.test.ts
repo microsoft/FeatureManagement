@@ -3,12 +3,25 @@
 
 import * as fs from "node:fs/promises";
 import * as chai from "chai";
+import * as sinon from "sinon";
 import chaiAsPromised from "chai-as-promised";
-
 chai.use(chaiAsPromised);
-import { load } from "@azure/app-configuration-provider";
-import { FeatureManager, ConfigurationObjectFeatureFlagProvider, ConfigurationMapFeatureFlagProvider, createFeatureEvaluationEventProperties, EvaluationResult } from "@microsoft/feature-management";
 const expect = chai.expect;
+
+import { load } from "@azure/app-configuration-provider";
+import { FeatureManager, ConfigurationObjectFeatureFlagProvider, ConfigurationMapFeatureFlagProvider } from "@microsoft/feature-management";
+import { createTelemetryPublisher } from "@microsoft/feature-management-applicationinsights-browser" ;
+
+import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+const appInsights = new ApplicationInsights({ config: { connectionString: "DUMMY-CONNECTION-STRING" }});
+// For telemetry validation
+let eventToValidate;
+let eventPropertiesToValidate;
+sinon.stub(appInsights, "trackEvent").callsFake((event, customProperties) => {
+    eventToValidate = event;
+    eventPropertiesToValidate = customProperties;
+});
+
 
 const FILE_PATH = "../../Samples/"
 const SAMPLE_JSON_KEY = ".sample.json"
@@ -135,14 +148,7 @@ async function runTestWithProvider(testName: string) {
         const testcases: FeatureFlagTest[] = JSON.parse(await fs.readFile(FILE_PATH + testName + TESTS_JSON_KEY, "utf8"));
         const ffProvider = new ConfigurationMapFeatureFlagProvider(config);
 
-        // For telemetry validation
-        let propertiesToValidate;
-        const validateTelemetry = (result: EvaluationResult) => {
-            propertiesToValidate = createFeatureEvaluationEventProperties(result);
-        };
-
-        const fm = new FeatureManager(ffProvider, { onFeatureEvaluated: validateTelemetry });
-
+        const fm = new FeatureManager(ffProvider, { onFeatureEvaluated: createTelemetryPublisher(appInsights) });
         for (const testcase of testcases){
             const featureFlagName = testcase.FeatureFlagName;
             const context = { userId: testcase.Inputs?.User, groups: testcase.Inputs?.Groups };
@@ -190,10 +196,50 @@ async function runTestWithProvider(testName: string) {
                 }
             }
 
+            if (testcase.Telemetry?.EventName) {
+                expect(eventToValidate.name).to.eq(testcase.Telemetry.EventName);
+            }
+
             const eventProperties = testcase.Telemetry?.EventProperties;
             if (eventProperties) {
+                if (eventProperties.FeatureName) {
+                    expect(eventPropertiesToValidate["FeatureName"]).to.eq(eventProperties.FeatureName);
+                }
+                if (eventProperties.Enabled) {
+                    expect(eventPropertiesToValidate["Enabled"]).to.eq(eventProperties.Enabled);
+                }
+                if (eventProperties.Version) {
+                    expect(eventPropertiesToValidate["Version"]).to.eq(eventProperties.Version);
+                }
+                if (eventProperties.Variant) {
+                    expect(eventPropertiesToValidate["Variant"]).to.eq(eventProperties.Variant);
+                }
+                if (eventProperties.VariantAssignmentReason) {
+                    expect(eventPropertiesToValidate["VariantAssignmentReason"]).to.eq(eventProperties.VariantAssignmentReason);
+                }
+                if (eventProperties.VariantAssignmentPercentage) {
+                    expect(eventPropertiesToValidate["VariantAssignmentPercentage"]).to.eq(eventProperties.VariantAssignmentPercentage);
+                }
+                if (eventProperties.DefaultWhenEnabled) {
+                    expect(eventPropertiesToValidate["DefaultWhenEnabled"]).to.eq(eventProperties.DefaultWhenEnabled);
+                }
                 if (eventProperties.AllocationId) {
-                    expect(propertiesToValidate["AllocationId"]).to.eq(eventProperties.AllocationId);
+                    expect(eventPropertiesToValidate["AllocationId"]).to.eq(eventProperties.AllocationId);
+                }
+                if (eventProperties.FeatureFlagId) {
+                    expect(eventPropertiesToValidate["FeatureFlagId"]).to.eq(eventProperties.FeatureFlagId);
+                }
+                if (eventProperties.FeatureFlagReference) {
+                    const endpointMatch = connectionString.match(/Endpoint=([^;]+)/);
+                    if (endpointMatch) {
+                        expect(eventPropertiesToValidate["FeatureFlagReference"]).to.eq(endpointMatch[1] + eventProperties.FeatureFlagReference);
+                    }
+                    else {
+                        expect.fail("Connection string does not contain endpoint.");
+                    }
+                }
+                if (eventProperties.TargetingId) {
+                    expect(eventPropertiesToValidate["TargetingId"]).to.eq(eventProperties.TargetingId);
                 }
             }
 
@@ -236,5 +282,9 @@ describe("feature manager", function () {
 
     it("should pass ProviderTelemetry test", async () => {
         await runTestWithProvider("ProviderTelemetry");
+    });
+
+    it("should pass ProviderTelemetryComplete test", async () => {
+        await runTestWithProvider("ProviderTelemetryComplete");
     });
 });
