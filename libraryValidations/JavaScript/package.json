@@ -17,9 +17,11 @@
         "sinon": "^15.2.0",
         "tslib": "^2.6.2",
         "typescript": "^5.3.3",
-        "@microsoft/feature-management": "latest",
-        "@microsoft/feature-management-applicationinsights-browser": "latest",
-        "@azure/app-configuration-provider": "latest",
-        "@microsoft/applicationinsights-web": "^3.3.4"
+        "@microsoft/feature-management": "file:./microsoft-feature-management-2.0.0-preview.3.tgz",
+        "@microsoft/feature-management-applicationinsights-browser": "file:./microsoft-feature-management-applicationinsights-browser-2.0.0-preview.3.tgz",
+        "@microsoft/feature-management-applicationinsights-node": "file:./microsoft-feature-management-applicationinsights-node-2.0.0-preview.3.tgz",
+        "@azure/app-configuration-provider": "file:./azure-app-configuration-provider-2.0.0-preview.1.tgz",
+        "@microsoft/applicationinsights-web": "^3.3.4",
+        "applicationinsights": "^2.9.6"
     }
 }
