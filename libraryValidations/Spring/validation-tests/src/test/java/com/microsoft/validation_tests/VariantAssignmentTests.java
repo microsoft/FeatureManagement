@@ -10,15 +10,15 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 @SpringJUnitConfig
-@TestPropertySource(locations = "file:./../../../Samples/TimeWindowFilter.sample.json", factory = YamlPropertySourceFactory.class)
+@TestPropertySource(locations = "file:./../../../Samples/VariantAssignment.sample.json", factory = YamlPropertySourceFactory.class)
 @SpringBootTest(classes = { SpringBootTest.class, Filters.class })
 @EnableConfigurationProperties
 @ComponentScan(basePackages = { "com.azure.spring.cloud.feature.management" })
-class TimeWindowFilterTests extends ValidationTestsApplicationTests {
+class VariantAssignmentTests extends ValidationTestsApplicationTests {
 
     @Test
     void validateTest() throws IOException {
-        runTests("TimeWindowFilter");
+        runTests("VariantAssignment");
     }
 
 }
