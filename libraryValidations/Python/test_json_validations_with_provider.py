@@ -109,9 +109,7 @@ class TestFromProvider(unittest.TestCase):
                 expected_message = is_enabled.get(EXCEPTION_KEY)
                 assert str(ex_info.value) == expected_message, failed_description
 
-            if get_variant and (
-                RESULT_KEY in get_variant or EXCEPTION_KEY in get_variant
-            ):
+            if get_variant:
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
 

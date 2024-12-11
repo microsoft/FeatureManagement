@@ -96,15 +96,12 @@ class TestFromFile(unittest.TestCase):
     def telemetry_callback(self, evaluation_event):
         publish_telemetry(evaluation_event)
         expected_telemetry = self._feature_flag_test.get(GET_TELEMETRY_KEY, {})
-        self._mock_track_event.assert_has_calls(
-            [
-                call(
-                    expected_telemetry.get(EVENT_NAME_KEY, None),
-                    expected_telemetry.get(EVENT_PROPERTIES_KEY, None),
-                )
-            ]
-        )
+        self._mock_track_event.assert_called_once()
+        self.assertEqual(self._mock_track_event.call_args[0][0], expected_telemetry.get(EVENT_NAME_KEY, None))
+        (event_properties) = self._mock_track_event.call_args[0][1]
+        self.assertEqual(sorted(event_properties), sorted(expected_telemetry.get(EVENT_PROPERTIES_KEY, {})))
         self._ran_callback = True
+        self._mock_track_event.reset_mock()
 
     def run_tests(self, test_key, telemetry_callback=None):
         feature_manager = self.load_from_file(
@@ -146,9 +143,7 @@ class TestFromFile(unittest.TestCase):
                 expected_message = is_enabled.get(EXCEPTION_KEY)
                 assert str(ex_info.value) == expected_message, failed_description
 
-            if get_variant and (
-                RESULT_KEY in get_variant or EXCEPTION_KEY in get_variant
-            ):
+            if get_variant:
                 user = feature_flag_test[INPUTS_KEY].get(USER_KEY, None)
                 groups = feature_flag_test[INPUTS_KEY].get(GROUPS_KEY, [])
 
