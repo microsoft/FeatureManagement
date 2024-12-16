@@ -1,0 +1,33 @@
+[
+    {
+        "FeatureFlagName": "TelemetryVariant",
+        "Inputs": {"User":"Aiden"},
+        "IsEnabled": {
+            "Result": "false"
+        },
+        "Variant": {
+            "Result": {
+                "Name": "True_Override",
+                "ConfigurationValue": "default"
+            }
+        },
+        "Telemetry": {
+            "EventName": "FeatureEvaluation",
+            "EventProperties": {
+                "FeatureName": "TelemetryVariant",
+                "Enabled": "False",
+                "Version": "1.0.0",
+                "Variant": "True_Override",
+                "VariantAssignmentReason": "DefaultWhenEnabled",
+                "VariantAssignmentPercentage": "100",
+                "DefaultWhenEnabled": "True_Override",
+                "AllocationId": "MExY1waco2tqen4EcJKK",
+                "ETag": "cmwBRcIAq1jUyKL3Kj8bvf9jtxBrFg-R-ayExStMC90",
+                "FeatureFlagReference": "https://fake-config-store/kv/.appconfig.featureflag/TelemetryVariant",
+                "FeatureFlagId": "7vpkRJe452WVvlKXfA5XF3ASllwKsYZfC7D4w05rIoo",
+                "TargetingId": "Aiden"
+            }
+        },
+        "Description": "A basic feature flag with telemetry."
+    }
+]
