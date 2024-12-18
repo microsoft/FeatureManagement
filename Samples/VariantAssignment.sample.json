@@ -4,7 +4,7 @@
             {
                 "id": "UserAssignedVariant",
                 "description": "",
-                "enabled": "true",
+                "enabled": true,
                 "allocation": {
                     "user": [
                         {
@@ -36,7 +36,7 @@
             {
                 "id": "GroupAssignedVariant",
                 "description": "",
-                "enabled": "true",
+                "enabled": true,
                 "allocation": {
                     "group": [
                         {
@@ -67,7 +67,7 @@
             {
                 "id": "AllocationAssignedVariant",
                 "description": "",
-                "enabled": "true",
+                "enabled": true,
                 "allocation": {
                     "percentile": [
                         {
@@ -96,7 +96,7 @@
             {
                 "id": "ComplexAssignment",
                 "description": "",
-                "enabled": "true",
+                "enabled": true,
                 "allocation": {
                     "user": [
                         {
