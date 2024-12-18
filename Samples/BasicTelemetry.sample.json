@@ -4,7 +4,7 @@
             {
                 "id": "TelemetryVariant",
                 "description": "",
-                "enabled": "true",
+                "enabled": true,
                 "conditions": {
                     "client_filters": []
                 },
