@@ -408,3 +408,9 @@ venv/
 .settings
 mvnw*
 target/
+
+package-lock.json
+
+# JavaScript bundler folder
+out/
+*.tgz
