@@ -69,7 +69,6 @@ class ValidationTestsApplicationTests {
             VariantResult variantResult = testCase.getVariant();
 
             if (variantResult != null && variantResult.getResult() != null && testCase.getVariant() != null) {
-                System.out.println("Variant");
                 final Variant getVariantResult = featureManager.getVariant(testCase.getFeatureFlagName());
                 if (variantResult.getResult().getName() != null) {
                     assertEquals(variantResult.getResult().getName(), getVariantResult.getName());
