@@ -14,4 +14,10 @@ deactivate
 Set-Location -Path "../Spring/validation-tests"
 mvn test
 
+# Navigate to the JavaScript directory and run test
+Set-Location -Path "../JavaScript"
+npm install
+npm run build
+npm run test
+
 Set-Location -Path "../.."
