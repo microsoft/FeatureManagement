@@ -3,7 +3,7 @@
 
 import * as fs from "node:fs/promises";
 import { FeatureManager, ConfigurationObjectFeatureFlagProvider } from "@microsoft/feature-management";
-import {FILE_PATH, SAMPLE_JSON_KEY, TESTS_JSON_KEY, validateFeatureEvaluation, FeatureFlagTest } from "./utils.js";
+import { FILE_PATH, SAMPLE_JSON_KEY, TESTS_JSON_KEY, validateFeatureEvaluation, FeatureFlagTest } from "./utils.js";
 
 async function runTest(testName: string) {
     const config = JSON.parse(await fs.readFile(FILE_PATH + testName + SAMPLE_JSON_KEY, "utf8"));
@@ -11,7 +11,7 @@ async function runTest(testName: string) {
     const ffProvider = new ConfigurationObjectFeatureFlagProvider(config);
     const fm = new FeatureManager(ffProvider);
 
-    for (const testcase of testcases){
+    for (const testcase of testcases) {
         validateFeatureEvaluation(testcase, fm);
     }
 }
