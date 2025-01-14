@@ -21,9 +21,13 @@
     },
     "Enabled": {
       "$id": "#/properties/Enabled",
-      "type": "boolean",
+      "type": "string",
       "title": "Feature Enabled",
-      "description": "Whether the feature flag is evaluated as enabled."
+      "description": "Whether the feature flag is evaluated as enabled.",
+      "enum": [
+        "True",
+        "False"
+      ]
     },
     "Variant": {
       "$id": "#/properties/Variant",
