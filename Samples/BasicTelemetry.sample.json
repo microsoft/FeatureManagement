@@ -4,7 +4,7 @@
             {
                 "id": "TelemetryVariant",
                 "description": "",
-                "enabled": "true",
+                "enabled": true,
                 "conditions": {
                     "client_filters": []
                 },
@@ -19,7 +19,7 @@
                     "default_when_enabled": "True_Override"
                 },
                 "telemetry": {
-                    "enabled": "true",
+                    "enabled": true,
                     "metadata": {
                         "ETag": "cmwBRcIAq1jUyKL3Kj8bvf9jtxBrFg-R-ayExStMC90",
                         "FeatureFlagReference": "https://fake-config-store/kv/.appconfig.featureflag/TelemetryVariant",
