@@ -19,7 +19,6 @@ def my_targeting_accessor() -> TargetingContext:
     if not session_id:
         session_id = str(uuid.uuid4())
         set_baggage("Session-ID", session_id)
-        set_baggage("Groups", ["Beta, Alpha"])
     return TargetingContext(user_id=session_id)
 
 # Configure Azure Monitor
