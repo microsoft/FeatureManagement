@@ -1,0 +1,77 @@
+# Sample Python Django Application using Azure App Configuration
+
+This is the sample Django  application that uses the Azure App Configuration Service [Deploy a Python (Django or Flask) web app to Azure App Service](https://docs.microsoft.com/en-us/azure/app-service/quickstart-python).  For instructions on how to create the Azure resources and deploy the application to Azure, refer to the Quickstart article.
+
+A [sample Flask application](../python-flask-webapp-sample/) is also available.
+
+If you need an Azure account, you can [create one for free](https://azure.microsoft.com/en-us/free/).
+
+## Prerequisites
+
+You must have an [Azure subscription][azure_sub], and a [Configuration Store][configuration_store] to use this package.
+
+To create a Configuration Store, you can either use [Azure Portal](https://ms.portal.azure.com/#create/Microsoft.Azconfig) or if you are using [Azure CLI][azure_cli] you can simply run the following snippet in your console:
+
+```Powershell
+az appconfig create --name <config-store-name> --resource-group <resource-group-name> --location eastus
+```
+
+### Create Keys
+
+```Powershell
+az appconfig kv set --name <config-store-name> --key testapp_settings_message --value "Hello from Azure App Configuration"
+az appconfig feature set --name <config-store-name> --feature Beta
+```
+
+## Setup
+
+Install the Azure App Configuration Provider client library for Python and other dependencies with pip:
+
+```commandline
+pip install -r requirements.txt
+```
+
+Set your App Configuration store endpoint as an environment variable.
+
+### Command Prompt
+
+```commandline
+setx AZURE_APPCONFIG_ENDPOINT "your-store-endpoint"
+```
+
+### PowerShell
+
+```Powershell
+$Env:AZURE_APPCONFIG_ENDPOINT="your-store-endpoint"
+```
+
+### Linux/ MacOS
+
+```Bash
+export AZURE_APPCONFIG_ENDPOINT="your-store-enpoint"
+```
+
+Start the django application using the following command:
+```commandline
+# Run database migration
+python manage.py migrate
+# Run the app at http://127.0.0.1:8000
+python manage.py runserver
+```
+
+## Refresh Configuration
+
+To refresh your configuration, you first update the value in Azure App Configuration, then update the Sentinel value to trigger a refresh.
+
+```Powershell
+az appconfig feature enable --name <config-store-name> --feature Beta
+```
+
+Refresh the page in your browser to see the updated value.
+
+NOTE: By default refresh can only be triggered every 30 seconds. You might have to wait up to 30 seconds and refresh the page again in order to see a change.
+
+<!-- LINKS -->
+[azure_sub]: https://azure.microsoft.com/free/
+[azure_cli]: https://docs.microsoft.com/cli/azure
+[configuration_store]: https://azure.microsoft.com/services/app-configuration/
