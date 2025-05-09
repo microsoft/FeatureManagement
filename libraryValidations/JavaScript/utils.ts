@@ -108,10 +108,10 @@ export async function validateFeatureEvaluation(testcase: FeatureFlagTest, featu
     }
 }
 
-export function validateTelemetryWithProvider(testcase: FeatureFlagTest, connectionString: string, eventNameToValidate: string, eventPropertiesToValidate: any) {
-    // if (testcase.Telemetry?.EventName) {
-    //     expect(eventNameToValidate).to.eq(testcase.Telemetry.EventName);
-    // }
+export function validateTelemetry(testcase: FeatureFlagTest, connectionString: string | undefined, eventNameToValidate: string, eventPropertiesToValidate: any) {
+    if (testcase.Telemetry?.EventName) {
+        expect(eventNameToValidate).to.eq(testcase.Telemetry.EventName);
+    }
 
     const eventProperties = testcase.Telemetry?.EventProperties;
     if (eventProperties) {
@@ -143,12 +143,17 @@ export function validateTelemetryWithProvider(testcase: FeatureFlagTest, connect
             expect(eventPropertiesToValidate["FeatureFlagId"]).to.eq(eventProperties.FeatureFlagId);
         }
         if (eventProperties.FeatureFlagReference) {
-            const endpointMatch = connectionString.match(/Endpoint=([^;]+)/);
-            if (endpointMatch) {
-                expect(eventPropertiesToValidate["FeatureFlagReference"]).to.eq(endpointMatch[1] + eventProperties.FeatureFlagReference);
+            if (connectionString === undefined) {
+                expect(eventPropertiesToValidate["FeatureFlagReference"]).to.eq(eventProperties.FeatureFlagReference);
             }
             else {
-                expect.fail("Connection string does not contain endpoint.");
+                const endpointMatch = connectionString.match(/Endpoint=([^;]+)/);
+                if (endpointMatch) {
+                    expect(eventPropertiesToValidate["FeatureFlagReference"]).to.eq(endpointMatch[1] + eventProperties.FeatureFlagReference);
+                }
+                else {
+                    expect.fail("Connection string does not contain endpoint.");
+                }
             }
         }
         if (eventProperties.TargetingId) {
