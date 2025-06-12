@@ -56,6 +56,48 @@
       "title": "Targeting Id",
       "description": "The targeting id used for the feature evaluation.",
       "pattern": "^(.*)$"
+    },
+    "DefaultWhenEnabled": {
+      "$id": "#/properties/DefaultWhenEnabled",
+      "type": "string",
+      "title": "Default When Enabled",
+      "description": "The default variant when the feature is enabled."
+    },
+    "Version": {
+      "$id": "#/properties/Version",
+      "type": "string",
+      "title": "Version",
+      "description": "The version of the feature evaluation event schema.",
+      "default": "1.0.0"
+    },
+    "VariantAssignmentPercentage": {
+      "$id": "#/properties/VariantAssignmentPercentage",
+      "type": "number",
+      "title": "Variant Assignment Percentage",
+      "description": "The percentage of users assigned to the variant that was assigned.",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "AllocationId": {
+      "$id": "#/properties/AllocationId",
+      "type": "string",
+      "title": "Allocation Id",
+      "description": "A unique identifier for the allocation of the feature flag. The value changes when any allocation of the flag changes.",
+      "pattern": "^(.*)$"
+    },
+    "ETag": {
+      "$id": "#/properties/ETag",
+      "type": "string",
+      "title": "ETag",
+      "description": "The ETag of the feature flag.",
+      "pattern": "^(.*)$"
+    },
+    "FeatureFlagReference": {
+      "$id": "#/properties/FeatureFlagReference",
+      "type": "string",
+      "title": "Feature Flag Reference",
+      "description": "The reference to the feature flag being evaluated.{endpoint}/kv{feature_flag_key}, plus ?label={feature_flag_label} when a label is specified.",
+      "pattern": "^(.*)$"
     }
   }
 }
