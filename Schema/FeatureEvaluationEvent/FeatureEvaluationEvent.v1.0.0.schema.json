@@ -95,6 +95,7 @@
     "FeatureFlagReference": {
       "$id": "#/properties/FeatureFlagReference",
       "type": "string",
+      "format": "uri",
       "title": "Feature Flag Reference",
       "description": "The reference to the feature flag being evaluated. Example: https://{host}/kv/{feature_flag_key}."
     }
