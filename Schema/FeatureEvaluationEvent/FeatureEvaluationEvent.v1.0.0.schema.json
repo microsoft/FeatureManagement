@@ -83,7 +83,8 @@
       "type": "string",
       "title": "Allocation Id",
       "description": "A unique identifier for the allocation of the feature flag. The value changes when any allocation of the flag changes.",
-      "pattern": "^(.*)$"
+      "pattern": "^[A-Za-z0-9+/]*={0,2}$",
+      "maxLength": 15
     },
     "ETag": {
       "$id": "#/properties/ETag",
