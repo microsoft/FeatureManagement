@@ -74,7 +74,7 @@
       "$id": "#/properties/VariantAssignmentPercentage",
       "type": "number",
       "title": "Variant Assignment Percentage",
-      "description": "The percentage of users assigned to the variant that was assigned.",
+      "description": "The percentage of users assigned to the variant that was assigned. This field is optional and only emitted when the assignment reason is DefaultWhenEnabled or Percentile.",
       "minimum": 0,
       "maximum": 100
     },
