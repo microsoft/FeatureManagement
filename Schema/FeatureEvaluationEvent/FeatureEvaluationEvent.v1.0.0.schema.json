@@ -96,7 +96,7 @@
       "$id": "#/properties/FeatureFlagReference",
       "type": "string",
       "title": "Feature Flag Reference",
-      "description": "The reference to the feature flag being evaluated.{endpoint}/kv{feature_flag_key}, plus ?label={feature_flag_label} when a label is specified.",
+      "description": "The reference to the feature flag being evaluated. Example: https://{host}/kv/{feature_flag_key}.",
       "pattern": "^(.*)$"
     }
   }
