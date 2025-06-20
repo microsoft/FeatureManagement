@@ -20,7 +20,7 @@
         "@microsoft/feature-management": "2.0.0-preview.3",
         "@microsoft/feature-management-applicationinsights-browser": "2.0.0-preview.3",
         "@microsoft/feature-management-applicationinsights-node": "2.0.0-preview.3",
-        "@azure/app-configuration-provider": "2.0.0-preview.1",
+        "@azure/app-configuration-provider": "2.0.0-preview.2",
         "@microsoft/applicationinsights-web": "^3.3.4",
         "applicationinsights": "^2.9.6"
     }
