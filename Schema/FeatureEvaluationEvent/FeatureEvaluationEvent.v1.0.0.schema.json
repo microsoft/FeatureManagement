@@ -21,9 +21,13 @@
     },
     "Enabled": {
       "$id": "#/properties/Enabled",
-      "type": "boolean",
+      "type": "string",
       "title": "Feature Enabled",
-      "description": "Whether the feature flag is evaluated as enabled."
+      "description": "Whether the feature flag is evaluated as enabled.",
+      "enum": [
+        "True",
+        "False"
+      ]
     },
     "Variant": {
       "$id": "#/properties/Variant",
@@ -52,6 +56,27 @@
       "title": "Targeting Id",
       "description": "The targeting id used for the feature evaluation.",
       "pattern": "^(.*)$"
+    },
+    "DefaultWhenEnabled": {
+      "$id": "#/properties/DefaultWhenEnabled",
+      "type": "string",
+      "title": "Default When Enabled",
+      "description": "The default variant when the feature is enabled."
+    },
+    "Version": {
+      "$id": "#/properties/Version",
+      "type": "string",
+      "title": "Version",
+      "description": "The version of the feature evaluation event schema.",
+      "default": "1.0.0"
+    },
+    "VariantAssignmentPercentage": {
+      "$id": "#/properties/VariantAssignmentPercentage",
+      "type": "number",
+      "title": "Variant Assignment Percentage",
+      "description": "The percentage of users assigned to the variant that was assigned. This field is optional and only emitted when the assignment reason is DefaultWhenEnabled or Percentile.",
+      "minimum": 0,
+      "maximum": 100
     }
   }
 }

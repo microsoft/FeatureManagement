@@ -1,6 +1,7 @@
 package com.microsoft.validation_tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,12 +14,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.azure.spring.cloud.feature.management.FeatureManager;
+import com.azure.spring.cloud.feature.management.models.Variant;
+import com.azure.spring.cloud.feature.management.validation_tests.models.ValidationTestCase;
+import com.azure.spring.cloud.feature.management.validation_tests.models.VariantResult;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.microsoft.validation_tests.models.ValidationTestCase;
 
 class ValidationTestsApplicationTests {
 
@@ -37,7 +40,6 @@ class ValidationTestsApplicationTests {
 
     @Autowired
     private FeatureManager featureManager;
-    
     @Autowired
     private TargetingFilterTestContextAccessor accessor;
 
@@ -62,7 +64,19 @@ class ValidationTestsApplicationTests {
             }
 
             final Boolean result = featureManager.isEnabled(testCase.getFeatureFlagName());
-            assertEquals(testCase.getIsEnabled().getResult(), result.toString(), testCase.getFeatureFlagName());
+            assertEquals(testCase.getIsEnabled().getResult(), result.toString(), testCase.getFriendlyName());
+
+            VariantResult variantResult = testCase.getVariant();
+
+            if (variantResult != null && variantResult.getResult() != null && testCase.getVariant() != null) {
+                final Variant getVariantResult = featureManager.getVariant(testCase.getFeatureFlagName());
+                if (variantResult.getResult().getName() != null) {
+                    assertEquals(variantResult.getResult().getName(), getVariantResult.getName());
+                }
+                assertEquals(variantResult.getResult().getConfigurationValue(), getVariantResult.getValue());
+
+            }
+
         }
     }
 

@@ -14,7 +14,7 @@
             "title": "Feature Management",
             "description": "Declares feature management configuration.",
             "additionalProperties": {
-                "$ref": "https://github.com/microsoft/FeatureManagement/blob/c5fab16dbf1450dce0bbfe7c4207da735ff31916/Schema/FeatureFlag.v1.1.0.schema.json"
+                "$ref": "https://raw.githubusercontent.com/microsoft/FeatureManagement/c5fab16dbf1450dce0bbfe7c4207da735ff31916/Schema/FeatureFlag.v1.1.0.schema.json"
             }
         }
     }
