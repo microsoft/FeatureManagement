@@ -7,7 +7,7 @@ import { load } from "@azure/app-configuration-provider";
 import { FeatureManager, ConfigurationMapFeatureFlagProvider } from "@microsoft/feature-management";
 import { createTelemetryPublisher as createNodeTelemetryPublisher } from "@microsoft/feature-management-applicationinsights-node";
 import { createTelemetryPublisher as createBrowserTelemetryPublisher } from "@microsoft/feature-management-applicationinsights-browser";
-import {FILE_PATH, TESTS_JSON_KEY, FeatureFlagTest, validateFeatureEvaluation, validateTelemetryWithProvider } from "./utils.js";
+import { FILE_PATH, TESTS_JSON_KEY, FeatureFlagTest, validateFeatureEvaluation, validateTelemetry } from "./utils.js";
 import { ApplicationInsights } from "@microsoft/applicationinsights-web";
 import applicationInsights from "applicationinsights";
 
@@ -48,11 +48,12 @@ async function runTestWithProviderAndNodePackage(testName: string) {
     const testcases: FeatureFlagTest[] = JSON.parse(await fs.readFile(FILE_PATH + testName + TESTS_JSON_KEY, "utf8"));
     const ffProvider = new ConfigurationMapFeatureFlagProvider(config);
     const fm = new FeatureManager(ffProvider, { onFeatureEvaluated: createNodeTelemetryPublisher(applicationInsights.defaultClient) });
-    for (const testcase of testcases){
+    for (const testcase of testcases) {
         const featureFlagName = testcase.FeatureFlagName;
         const context = { userId: testcase.Inputs?.User, groups: testcase.Inputs?.Groups };
         await fm.getVariant(featureFlagName, context);
-        validateTelemetryWithProvider(testcase, connectionString, eventNameToValidate, eventPropertiesToValidate);
+        validateTelemetry(testcase, connectionString, eventNameToValidate, eventPropertiesToValidate);
+        validateFeatureEvaluation(testcase, fm);
     }
 }
 
@@ -77,11 +78,12 @@ async function runTestWithProviderAndBrowserPackage(testName: string) {
     const testcases: FeatureFlagTest[] = JSON.parse(await fs.readFile(FILE_PATH + testName + TESTS_JSON_KEY, "utf8"));
     const ffProvider = new ConfigurationMapFeatureFlagProvider(config);
     const fm = new FeatureManager(ffProvider, { onFeatureEvaluated: createBrowserTelemetryPublisher(appInsights) });
-    for (const testcase of testcases){
+    for (const testcase of testcases) {
         const featureFlagName = testcase.FeatureFlagName;
         const context = { userId: testcase.Inputs?.User, groups: testcase.Inputs?.Groups };
         await fm.getVariant(featureFlagName, context);
-        validateTelemetryWithProvider(testcase, connectionString, eventNameToValidate, eventPropertiesToValidate);
+        validateTelemetry(testcase, connectionString, eventNameToValidate, eventPropertiesToValidate);
+        validateFeatureEvaluation(testcase, fm);
     }
 }
 
