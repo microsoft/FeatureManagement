@@ -31,6 +31,4 @@ public class TelemetryResult {
         this.eventProperties = eventProperties;
     }
     
-    
-
 }
