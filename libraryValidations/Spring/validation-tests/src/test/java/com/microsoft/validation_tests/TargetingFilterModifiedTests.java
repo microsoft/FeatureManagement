@@ -18,7 +18,7 @@ class TargetingFilterModifiedTests extends ValidationTestsApplicationTests {
 
     @Test
     void validateTest() throws IOException {
-        runTests("TargetingFilter.modified");
+        runTests("TargetingFilter.modified", null);
     }
 
 }

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.3</version>
+		<version>3.5.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.microsoft</groupId>
@@ -37,7 +37,7 @@
 		<dependency>
 		  <groupId>com.azure.spring</groupId>
 		  <artifactId>spring-cloud-azure-feature-management</artifactId>
-		  <version>5.17.0</version>
+		  <version>6.0.0-beta.2</version>
 		</dependency>
 
 		<dependency>

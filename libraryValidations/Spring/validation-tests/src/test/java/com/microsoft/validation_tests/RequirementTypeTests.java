@@ -18,7 +18,7 @@ class RequirementTypeTests extends ValidationTestsApplicationTests {
 
     @Test
     void validateTest() throws IOException {
-        runTests("RequirementType");
+        runTests("RequirementType", null);
     }
 
 }

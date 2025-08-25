@@ -18,7 +18,7 @@ class BasicVariantTests extends ValidationTestsApplicationTests {
     
     @Test
     void validateTest() throws IOException {
-        runTests("BasicVariant");
+        runTests("BasicVariant", null);
     }
 
 }
