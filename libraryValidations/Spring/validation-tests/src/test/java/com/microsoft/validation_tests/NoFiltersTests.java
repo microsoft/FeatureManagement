@@ -18,7 +18,7 @@ class NoFiltersTests extends ValidationTestsApplicationTests {
     
     @Test
     void validateTest() throws IOException {
-        runTests("NoFilters");
+        runTests("NoFilters", null);
     }
 
 }

@@ -18,7 +18,7 @@ class VariantAssignmentTests extends ValidationTestsApplicationTests {
 
     @Test
     void validateTest() throws IOException {
-        runTests("VariantAssignment");
+        runTests("VariantAssignment", null);
     }
 
 }

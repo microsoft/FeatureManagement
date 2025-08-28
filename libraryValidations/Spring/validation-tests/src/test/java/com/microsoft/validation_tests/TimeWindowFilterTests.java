@@ -18,7 +18,7 @@ class TimeWindowFilterTests extends ValidationTestsApplicationTests {
 
     @Test
     void validateTest() throws IOException {
-        runTests("TimeWindowFilter");
+        runTests("TimeWindowFilter", null);
     }
 
 }
