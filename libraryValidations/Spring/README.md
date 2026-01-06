@@ -17,7 +17,7 @@ mvn test
 
 ## Update to run more tests
 
-To add more tests, after creating the required json files in the `Samples` directory, add a new test class in the `src\test\java\com\microsoft\validation_tests` folder. The test file should be named as `<test_name>Tests.java`. And should use the bellow template.
+To add more tests, after creating the required json files in the `Samples` directory, add a new test class in the `src/test/java/com/microsoft/validation_tests` folder. The test file should be named as `<test_name>Tests.java` and should use the following template.
 
 ```java
 import java.io.IOException;

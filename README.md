@@ -1,5 +1,7 @@
 # Microsoft Feature Management
 
+[![Validation Tests](https://github.com/microsoft/FeatureManagement/actions/workflows/validation-tests.yml/badge.svg)](https://github.com/microsoft/FeatureManagement/actions/workflows/validation-tests.yml)
+
 Traditionally, shipping a new application feature requires a complete redeployment of the application itself. Testing a feature often requires multiple deployments of the application. Each deployment might change the feature or expose the feature to different customers for testing.  
 
 Feature management is a software-development practice that decouples feature release from code deployment and enables quick changes to feature availability on demand. It uses a technique called *feature flags* (also known as *feature toggles* and *feature switches*) to dynamically administer a feature's lifecycle.

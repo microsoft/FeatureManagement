@@ -1,0 +1,306 @@
+name: Validation Tests
+
+on:
+  # Run every Monday at 8:00 AM UTC (early Monday morning)
+  schedule:
+    - cron: '0 8 * * 1'
+  # Run on pull requests
+  pull_request:
+    branches:
+      - main
+      - master
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  dotnet-tests:
+    name: .NET Tests
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.test.outcome }}
+      results: ${{ steps.test-details.outputs.results }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Run .NET tests
+        id: test
+        continue-on-error: true
+        working-directory: ./libraryValidations/Dotnet
+        run: dotnet test --logger "trx;LogFileName=test-results.trx" --logger "console;verbosity=detailed"
+
+      - name: Parse .NET test results
+        id: test-details
+        if: always()
+        working-directory: ./libraryValidations/Dotnet
+        run: |
+          echo 'results<<EOF' >> $GITHUB_OUTPUT
+          if [ -f "TestResults/test-results.trx" ]; then
+            # Extract test results from TRX file
+            python3 << 'PYTHON'
+          import xml.etree.ElementTree as ET
+          import json
+          
+          tree = ET.parse('TestResults/test-results.trx')
+          root = tree.getroot()
+          ns = {'ns': 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+          
+          results = {}
+          for test in root.findall('.//ns:UnitTestResult', ns):
+              test_name = test.get('testName')
+              outcome = test.get('outcome')
+              results[test_name] = '✅' if outcome == 'Passed' else '❌'
+          
+          print(json.dumps(results))
+          PYTHON
+          else
+            echo "{}"
+          fi
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+  python-tests:
+    name: Python Tests
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.test.outcome }}
+      results: ${{ steps.test-details.outputs.results }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: ./libraryValidations/Python
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run Python tests
+        id: test
+        continue-on-error: true
+        working-directory: ./libraryValidations/Python
+        run: |
+          pytest test_json_validations.py --junitxml=results.xml --verbose || true
+          if [ ! -z "${{ secrets.APP_CONFIG_VALIDATION_CONNECTION_STRING }}" ]; then
+            pytest test_json_validations_with_provider.py --junitxml=results_provider.xml --verbose || true
+          fi
+
+      - name: Parse Python test results
+        id: test-details
+        if: always()
+        working-directory: ./libraryValidations/Python
+        run: |
+          echo 'results<<EOF' >> $GITHUB_OUTPUT
+          python3 << 'PYTHON'
+          import xml.etree.ElementTree as ET
+          import json
+          import os
+          
+          results = {}
+          for xml_file in ['results.xml', 'results_provider.xml']:
+              if os.path.exists(xml_file):
+                  tree = ET.parse(xml_file)
+                  root = tree.getroot()
+                  
+                  for testcase in root.findall('.//testcase'):
+                      test_name = testcase.get('name')
+                      # Check if test failed
+                      failed = testcase.find('failure') is not None or testcase.find('error') is not None
+                      results[test_name] = '❌' if failed else '✅'
+          
+          print(json.dumps(results))
+          PYTHON
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+  javascript-tests:
+    name: JavaScript Tests
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.test.outcome }}
+      results: ${{ steps.test-details.outputs.results }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        working-directory: ./libraryValidations/JavaScript
+        run: npm install
+
+      - name: Build
+        working-directory: ./libraryValidations/JavaScript
+        run: npm run build
+
+      - name: Run JavaScript tests
+        id: test
+        continue-on-error: true
+        working-directory: ./libraryValidations/JavaScript
+        env:
+          JEST_JUNIT_OUTPUT_DIR: ./
+          JEST_JUNIT_OUTPUT_NAME: results.xml
+        run: |
+          npm install --save-dev jest-junit
+          npm run test -- --reporters=default --reporters=jest-junit || true
+
+      - name: Parse JavaScript test results
+        id: test-details
+        if: always()
+        working-directory: ./libraryValidations/JavaScript
+        run: |
+          echo 'results<<EOF' >> $GITHUB_OUTPUT
+          if [ -f "results.xml" ]; then
+            python3 << 'PYTHON'
+          import xml.etree.ElementTree as ET
+          import json
+          
+          tree = ET.parse('results.xml')
+          root = tree.getroot()
+          
+          results = {}
+          for testcase in root.findall('.//testcase'):
+              test_name = testcase.get('name')
+              # Check if test failed
+              failed = testcase.find('failure') is not None or testcase.find('error') is not None
+              results[test_name] = '❌' if failed else '✅'
+          
+          print(json.dumps(results))
+          PYTHON
+          else
+            echo "{}"
+          fi
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+  spring-tests:
+    name: Spring Tests
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.test.outcome }}
+      results: ${{ steps.test-details.outputs.results }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Spring tests
+        id: test
+        continue-on-error: true
+        working-directory: ./libraryValidations/Spring/validation-tests
+        run: mvn test
+
+      - name: Parse Spring test results
+        id: test-details
+        if: always()
+        working-directory: ./libraryValidations/Spring/validation-tests
+        run: |
+          echo 'results<<EOF' >> $GITHUB_OUTPUT
+          python3 << 'PYTHON'
+          import xml.etree.ElementTree as ET
+          import json
+          import os
+          import glob
+          
+          results = {}
+          xml_files = glob.glob('target/surefire-reports/TEST-*.xml')
+          
+          for xml_file in xml_files:
+              tree = ET.parse(xml_file)
+              root = tree.getroot()
+              
+              for testcase in root.findall('.//testcase'):
+                  test_name = testcase.get('name')
+                  # Check if test failed
+                  failed = testcase.find('failure') is not None or testcase.find('error') is not None
+                  results[test_name] = '❌' if failed else '✅'
+          
+          print(json.dumps(results))
+          PYTHON
+          echo 'EOF' >> $GITHUB_OUTPUT
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [dotnet-tests, python-tests, javascript-tests, spring-tests]
+    if: always()
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate test matrix
+        id: matrix
+        run: |
+          python3 << 'PYTHON'
+          import json
+          import os
+          import glob
+          
+          # Parse results from each language
+          dotnet_results = json.loads('''${{ needs.dotnet-tests.outputs.results }}''') if '${{ needs.dotnet-tests.outputs.results }}' else {}
+          python_results = json.loads('''${{ needs.python-tests.outputs.results }}''') if '${{ needs.python-tests.outputs.results }}' else {}
+          javascript_results = json.loads('''${{ needs.javascript-tests.outputs.results }}''') if '${{ needs.javascript-tests.outputs.results }}' else {}
+          spring_results = json.loads('''${{ needs.spring-tests.outputs.results }}''') if '${{ needs.spring-tests.outputs.results }}' else {}
+          
+          # Collect all unique test names across all languages
+          all_tests = set()
+          all_tests.update(dotnet_results.keys())
+          all_tests.update(python_results.keys())
+          all_tests.update(javascript_results.keys())
+          all_tests.update(spring_results.keys())
+          
+          # Sort tests for consistent output
+          sorted_tests = sorted(all_tests)
+          
+          # Generate markdown table
+          with open('summary.md', 'w') as f:
+              f.write("## 🧪 Validation Test Results\n\n")
+              f.write("| Test Name | .NET | Python | JavaScript | Spring |\n")
+              f.write("|-----------|------|--------|------------|--------|\n")
+              
+              for test in sorted_tests:
+                  # Get result for each language, default to ⚠️ if not found
+                  dotnet = dotnet_results.get(test, '⚠️')
+                  python = python_results.get(test, '⚠️')
+                  javascript = javascript_results.get(test, '⚠️')
+                  spring = spring_results.get(test, '⚠️')
+                  
+                  f.write(f"| {test} | {dotnet} | {python} | {javascript} | {spring} |\n")
+              
+              f.write(f"\n_Workflow run: ${{ github.run_id }}_\n")
+          
+          # Print to console
+          with open('summary.md', 'r') as f:
+              print(f.read())
+          PYTHON
+          
+          cat summary.md >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('summary.md', 'utf8');
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: summary
+            });
