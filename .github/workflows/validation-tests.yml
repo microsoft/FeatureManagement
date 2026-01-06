@@ -37,33 +37,45 @@ jobs:
         id: test
         continue-on-error: true
         working-directory: ./libraryValidations/Dotnet
-        run: dotnet test --logger "trx;LogFileName=test-results.trx" --logger "console;verbosity=detailed"
+        run: dotnet test --logger trx --results-directory ./TestResults
 
       - name: Parse .NET test results
         id: test-details
         if: always()
         working-directory: ./libraryValidations/Dotnet
         run: |
+          echo "=== Listing all files in TestResults directory ==="
+          find ./TestResults -type f 2>/dev/null || echo "No TestResults directory"
+          echo "=========================================="
+          
           echo 'results<<EOF' >> $GITHUB_OUTPUT
-          if [ -f "TestResults/test-results.trx" ]; then
-            # Extract test results from TRX file
-            python3 << 'PYTHON'
+          TRX_FILE=$(find ./TestResults -name "*.trx" -type f 2>/dev/null | head -1)
+          if [ ! -z "$TRX_FILE" ]; then
+            echo "Found TRX file: $TRX_FILE"
+            export TRX_FILE
+            python3 <<'PYTHON'
           import xml.etree.ElementTree as ET
           import json
+          import os
           
-          tree = ET.parse('TestResults/test-results.trx')
-          root = tree.getroot()
-          ns = {'ns': 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
-          
-          results = {}
-          for test in root.findall('.//ns:UnitTestResult', ns):
-              test_name = test.get('testName')
-              outcome = test.get('outcome')
-              results[test_name] = '✅' if outcome == 'Passed' else '❌'
-          
-          print(json.dumps(results))
+          trx_file = os.environ.get('TRX_FILE')
+          if trx_file:
+              tree = ET.parse(trx_file)
+              root = tree.getroot()
+              ns = {'ns': 'http://microsoft.com/schemas/VisualStudio/TeamTest/2010'}
+              
+              results = {}
+              for test in root.findall('.//ns:UnitTestResult', ns):
+                  test_name = test.get('testName')
+                  outcome = test.get('outcome')
+                  results[test_name] = '✅' if outcome == 'Passed' else '❌'
+              
+              print(json.dumps(results))
+          else:
+              print("{}")
           PYTHON
           else
+            echo "No TRX file found"
             echo "{}"
           fi
           echo 'EOF' >> $GITHUB_OUTPUT
@@ -103,8 +115,12 @@ jobs:
         if: always()
         working-directory: ./libraryValidations/Python
         run: |
+          echo "=== Listing Python test output files ==="
+          ls -la *.xml 2>/dev/null || echo "No XML files found"
+          echo "=========================================="
+          
           echo 'results<<EOF' >> $GITHUB_OUTPUT
-          python3 << 'PYTHON'
+          python3 <<'PYTHON'
           import xml.etree.ElementTree as ET
           import json
           import os
@@ -112,16 +128,16 @@ jobs:
           results = {}
           for xml_file in ['results.xml', 'results_provider.xml']:
               if os.path.exists(xml_file):
+                  print(f"Parsing {xml_file}", flush=True)
                   tree = ET.parse(xml_file)
                   root = tree.getroot()
                   
                   for testcase in root.findall('.//testcase'):
                       test_name = testcase.get('name')
-                      # Check if test failed
                       failed = testcase.find('failure') is not None or testcase.find('error') is not None
                       results[test_name] = '❌' if failed else '✅'
           
-          print(json.dumps(results))
+          print(json.dumps(results), flush=True)
           PYTHON
           echo 'EOF' >> $GITHUB_OUTPUT
 
@@ -152,37 +168,54 @@ jobs:
         id: test
         continue-on-error: true
         working-directory: ./libraryValidations/JavaScript
-        env:
-          JEST_JUNIT_OUTPUT_DIR: ./
-          JEST_JUNIT_OUTPUT_NAME: results.xml
         run: |
           npm install --save-dev jest-junit
-          npm run test -- --reporters=default --reporters=jest-junit || true
+          npx jest --reporters=jest-junit --testResultsProcessor=jest-junit || true
 
       - name: Parse JavaScript test results
         id: test-details
         if: always()
         working-directory: ./libraryValidations/JavaScript
         run: |
+          echo "=== Listing JavaScript test output files ==="
+          ls -la junit.xml 2>/dev/null || echo "No junit.xml found"
+          find . -maxdepth 2 -name "*.xml" -type f 2>/dev/null | head -10
+          echo "=========================================="
+          
           echo 'results<<EOF' >> $GITHUB_OUTPUT
-          if [ -f "results.xml" ]; then
-            python3 << 'PYTHON'
+          XML_FILE=""
+          if [ -f "junit.xml" ]; then
+            XML_FILE="junit.xml"
+          elif [ -f "test-results/junit.xml" ]; then
+            XML_FILE="test-results/junit.xml"
+          fi
+          
+          if [ ! -z "$XML_FILE" ]; then
+            echo "Parsing JavaScript $XML_FILE"
+            export XML_FILE
+            python3 <<'PYTHON'
           import xml.etree.ElementTree as ET
           import json
+          import os
           
-          tree = ET.parse('results.xml')
-          root = tree.getroot()
+          xml_file = os.environ.get('XML_FILE')
           
-          results = {}
-          for testcase in root.findall('.//testcase'):
-              test_name = testcase.get('name')
-              # Check if test failed
-              failed = testcase.find('failure') is not None or testcase.find('error') is not None
-              results[test_name] = '❌' if failed else '✅'
-          
-          print(json.dumps(results))
+          if xml_file and os.path.exists(xml_file):
+              tree = ET.parse(xml_file)
+              root = tree.getroot()
+              
+              results = {}
+              for testcase in root.findall('.//testcase'):
+                  test_name = testcase.get('name')
+                  failed = testcase.find('failure') is not None or testcase.find('error') is not None
+                  results[test_name] = '❌' if failed else '✅'
+              
+              print(json.dumps(results), flush=True)
+          else:
+              print("{}")
           PYTHON
           else
+            echo "No JavaScript test results XML found"
             echo "{}"
           fi
           echo 'EOF' >> $GITHUB_OUTPUT
@@ -214,8 +247,13 @@ jobs:
         if: always()
         working-directory: ./libraryValidations/Spring/validation-tests
         run: |
+          echo "=== Listing Spring test output files ==="
+          ls -la target/surefire-reports/ 2>/dev/null || echo "No surefire-reports directory"
+          find target -name "*.xml" -type f 2>/dev/null | head -10
+          echo "=========================================="
+          
           echo 'results<<EOF' >> $GITHUB_OUTPUT
-          python3 << 'PYTHON'
+          python3 <<'PYTHON'
           import xml.etree.ElementTree as ET
           import json
           import os
@@ -224,17 +262,19 @@ jobs:
           results = {}
           xml_files = glob.glob('target/surefire-reports/TEST-*.xml')
           
+          print(f"Found {len(xml_files)} Spring test result files", flush=True)
+          
           for xml_file in xml_files:
+              print(f"Parsing {xml_file}", flush=True)
               tree = ET.parse(xml_file)
               root = tree.getroot()
               
               for testcase in root.findall('.//testcase'):
                   test_name = testcase.get('name')
-                  # Check if test failed
                   failed = testcase.find('failure') is not None or testcase.find('error') is not None
                   results[test_name] = '❌' if failed else '✅'
           
-          print(json.dumps(results))
+          print(json.dumps(results), flush=True)
           PYTHON
           echo 'EOF' >> $GITHUB_OUTPUT
 
@@ -249,17 +289,44 @@ jobs:
 
       - name: Generate test matrix
         id: matrix
+        env:
+          DOTNET_RESULTS: ${{ needs.dotnet-tests.outputs.results }}
+          PYTHON_RESULTS: ${{ needs.python-tests.outputs.results }}
+          JAVASCRIPT_RESULTS: ${{ needs.javascript-tests.outputs.results }}
+          SPRING_RESULTS: ${{ needs.spring-tests.outputs.results }}
         run: |
-          python3 << 'PYTHON'
+          python3 <<'PYTHON'
           import json
           import os
-          import glob
+          
+          # Debug: print raw results
+          print("=== Debug: Raw Results ===")
+          print(f"DOTNET: {os.environ.get('DOTNET_RESULTS', 'EMPTY')}")
+          print(f"PYTHON: {os.environ.get('PYTHON_RESULTS', 'EMPTY')}")
+          print(f"JAVASCRIPT: {os.environ.get('JAVASCRIPT_RESULTS', 'EMPTY')}")
+          print(f"SPRING: {os.environ.get('SPRING_RESULTS', 'EMPTY')}")
+          print("========================\n")
           
           # Parse results from each language
-          dotnet_results = json.loads('''${{ needs.dotnet-tests.outputs.results }}''') if '${{ needs.dotnet-tests.outputs.results }}' else {}
-          python_results = json.loads('''${{ needs.python-tests.outputs.results }}''') if '${{ needs.python-tests.outputs.results }}' else {}
-          javascript_results = json.loads('''${{ needs.javascript-tests.outputs.results }}''') if '${{ needs.javascript-tests.outputs.results }}' else {}
-          spring_results = json.loads('''${{ needs.spring-tests.outputs.results }}''') if '${{ needs.spring-tests.outputs.results }}' else {}
+          try:
+              dotnet_results = json.loads(os.environ.get('DOTNET_RESULTS', '{}'))
+          except:
+              dotnet_results = {}
+              
+          try:
+              python_results = json.loads(os.environ.get('PYTHON_RESULTS', '{}'))
+          except:
+              python_results = {}
+              
+          try:
+              javascript_results = json.loads(os.environ.get('JAVASCRIPT_RESULTS', '{}'))
+          except:
+              javascript_results = {}
+              
+          try:
+              spring_results = json.loads(os.environ.get('SPRING_RESULTS', '{}'))
+          except:
+              spring_results = {}
           
           # Collect all unique test names across all languages
           all_tests = set()
@@ -271,20 +338,26 @@ jobs:
           # Sort tests for consistent output
           sorted_tests = sorted(all_tests)
           
+          print(f"Found {len(sorted_tests)} unique tests")
+          
           # Generate markdown table
           with open('summary.md', 'w') as f:
               f.write("## 🧪 Validation Test Results\n\n")
-              f.write("| Test Name | .NET | Python | JavaScript | Spring |\n")
-              f.write("|-----------|------|--------|------------|--------|\n")
               
-              for test in sorted_tests:
-                  # Get result for each language, default to ⚠️ if not found
-                  dotnet = dotnet_results.get(test, '⚠️')
-                  python = python_results.get(test, '⚠️')
-                  javascript = javascript_results.get(test, '⚠️')
-                  spring = spring_results.get(test, '⚠️')
+              if not sorted_tests:
+                  f.write("⚠️ No test results found. Check individual job outputs for details.\n\n")
+              else:
+                  f.write("| Test Name | .NET | Python | JavaScript | Spring |\n")
+                  f.write("|-----------|------|--------|------------|--------|\n")
                   
-                  f.write(f"| {test} | {dotnet} | {python} | {javascript} | {spring} |\n")
+                  for test in sorted_tests:
+                      # Get result for each language, default to ⚠️ if not found
+                      dotnet = dotnet_results.get(test, '⚠️')
+                      python = python_results.get(test, '⚠️')
+                      javascript = javascript_results.get(test, '⚠️')
+                      spring = spring_results.get(test, '⚠️')
+                      
+                      f.write(f"| {test} | {dotnet} | {python} | {javascript} | {spring} |\n")
               
               f.write(f"\n_Workflow run: ${{ github.run_id }}_\n")
           
